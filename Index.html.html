@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Monitoria de Serviços</title>
+  <style>
+    :root {
+      /* PALETA OFICIAL “GUARIROBA” */
+      --turquesa-rio: #17E3CB;
+      --azul-mar: #0027BD;
+      --turquesa-rio-sombra: #9DEEE7;
+      --azul-mar-sombra: #111799;
+
+      --branco: #FFFFFF;
+      --cinza-1: #E2E5F0;
+      --cinza-2: #8C91A4;
+      --cinza-3: #44495C;
+      --cinza-4: #191B23;
+
+      --amarelo-pequi: #F8DC00;
+      --laranja-da-baia: #FE952B;
+      --vermelho-pitanga: #FF5C60;
+      --magenta-pitaia: #E12379;
+      --roxo-acai: #A11FFF;
+      --rosa-goiaba: #FF8FE1;
+      --marrom-claro-cacau: #AD6547;
+      --marrom-escuro-cafe: #332727;
+
+      --radius: 18px;
+      --radius-sm: 12px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, .10);
+      --shadow-soft: 0 6px 18px rgba(0, 0, 0, .08);
+      --ring: 0 0 0 3px rgba(23, 227, 203, .25);
+
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+      --bg: linear-gradient(180deg, #ffffff 0%, #f7f8fc 100%);
+    }
+
+    * { box-sizing: border-box }
+    html, body { height: 100% }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      color: var(--cinza-4);
+      background: var(--bg);
+    }
+
+    a { color: inherit }
+
+    .wrap {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 24px 18px 120px;
+    }
+
+    header.app-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: conic-gradient(from 180deg, var(--turquesa-rio), var(--azul-mar));
+      box-shadow: var(--shadow-soft);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: .2px;
+      line-height: 1.2;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--cinza-3);
+      font-size: 12.5px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr }
+    }
+
+    .card {
+      background: var(--branco);
+      border: 1px solid rgba(17, 23, 153, .10);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding: 16px;
+    }
+
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: var(--azul-mar);
+      letter-spacing: .25px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: rgba(23, 227, 203, .10);
+      color: var(--azul-mar);
+      border: 1px solid rgba(23, 227, 203, .35);
+      white-space: nowrap;
+    }
+
+    .muted { color: var(--cinza-3) }
+    .tiny { font-size: 12px }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 720px) {
+      .form-grid { grid-template-columns: 1fr }
+    }
+
+    label {
+      display: block;
+      font-size: 12.5px;
+      color: var(--cinza-3);
+      margin: 0 0 6px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(68, 73, 92, .22);
+      padding: 11px 12px;
+      font-size: 14px;
+      outline: none;
+      background: #fff;
+      transition: box-shadow .15s ease, border-color .15s ease;
+    }
+
+    input[readonly] {
+      background: linear-gradient(180deg, rgba(226, 229, 240, .55), rgba(226, 229, 240, .25));
+      border-color: rgba(68, 73, 92, .18);
+      color: var(--cinza-3);
+    }
+
+    textarea { min-height: 96px; resize: vertical }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: rgba(0, 39, 189, .45);
+      box-shadow: var(--ring);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(68, 73, 92, .12);
+      margin: 14px 0;
+    }
+
+    /* Pills */
+    .q-list { display: flex; flex-direction: column; gap: 12px }
+
+    .q-item {
+      border: 1px solid rgba(68, 73, 92, .14);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(226, 229, 240, .22), rgba(255, 255, 255, .85));
+    }
+
+    .q-top {
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .q-title {
+      font-weight: 650;
+      letter-spacing: .1px;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .q-meta {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      color: var(--cinza-3);
+      font-size: 12px;
+    }
+
+    .pillset { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px }
+
+    .pill {
+      border: 1px solid rgba(68, 73, 92, .22);
+      background: #fff;
+      color: var(--cinza-4);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform .08s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
+    }
+
+    .pill:hover { transform: translateY(-1px); box-shadow: 0 8px 16px rgba(0, 0, 0, .08) }
+    .pill:active { transform: translateY(0px) }
+
+    .pill[aria-pressed="true"] {
+      border-color: rgba(0, 39, 189, .55);
+      box-shadow: var(--ring);
+      background: linear-gradient(180deg, rgba(23, 227, 203, .22), rgba(23, 227, 203, .08));
+    }
+
+    .pill--no[aria-pressed="true"] {
+      border-color: rgba(255, 92, 96, .65);
+      background: linear-gradient(180deg, rgba(255, 92, 96, .18), rgba(255, 92, 96, .08));
+      box-shadow: 0 0 0 3px rgba(255, 92, 96, .18);
+    }
+
+    .pill--partial[aria-pressed="true"] {
+      border-color: rgba(254, 149, 43, .70);
+      background: linear-gradient(180deg, rgba(254, 149, 43, .18), rgba(254, 149, 43, .08));
+      box-shadow: 0 0 0 3px rgba(254, 149, 43, .18);
+    }
+
+    .pill--na[aria-pressed="true"] {
+      border-color: rgba(140, 145, 164, .75);
+      background: linear-gradient(180deg, rgba(140, 145, 164, .22), rgba(140, 145, 164, .10));
+      box-shadow: 0 0 0 3px rgba(140, 145, 164, .18);
+    }
+
+    .pill:focus-visible {
+      outline: none;
+      box-shadow: var(--ring);
+    }
+
+    .q-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid rgba(68, 73, 92, .18);
+      background: rgba(226, 229, 240, .35);
+      color: var(--cinza-3);
+      white-space: nowrap;
+    }
+
+    .chip strong { color: var(--cinza-4) }
+
+    .chip--pending {
+      border-color: rgba(254, 149, 43, .45);
+      background: rgba(254, 149, 43, .12);
+      color: #6a3a00;
+    }
+
+    .chip--ncg {
+      border-color: rgba(255, 92, 96, .55);
+      background: rgba(255, 92, 96, .12);
+      color: #7a1416;
+    }
+
+    /* Visor fixo */
+    .visor {
+      position: sticky;
+      top: 14px;
+      padding: 16px;
+      border-radius: var(--radius);
+      background: radial-gradient(1200px 240px at 10% 0%, rgba(23, 227, 203, .18), transparent 40%),
+                  radial-gradient(1200px 240px at 90% 0%, rgba(0, 39, 189, .16), transparent 45%),
+                  #fff;
+      border: 1px solid rgba(0, 39, 189, .12);
+      box-shadow: var(--shadow);
+    }
+
+    .visor h3 {
+      margin: 0;
+      font-size: 14px;
+      color: var(--azul-mar);
+      letter-spacing: .2px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .kpi {
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(226, 229, 240, .35);
+      border: 1px solid rgba(68, 73, 92, .10);
+    }
+
+    .kpi .label { font-size: 12px; color: var(--cinza-3) }
+    .kpi .value { font-size: 22px; font-weight: 800; letter-spacing: .2px; margin-top: 4px }
+
+    .progress {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(226, 229, 240, .85);
+      overflow: hidden;
+      border: 1px solid rgba(68, 73, 92, .10);
+      margin-top: 10px;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--turquesa-rio), var(--azul-mar));
+      transition: width .15s ease;
+    }
+
+    .status {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .status .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(68, 73, 92, .18);
+      background: rgba(255, 255, 255, .7);
+      font-weight: 700;
+      font-size: 12.5px;
+    }
+
+    .tag--ok {
+      border-color: rgba(23, 227, 203, .45);
+      color: var(--azul-mar);
+      background: rgba(23, 227, 203, .10);
+    }
+
+    .tag--ncg {
+      border-color: rgba(255, 92, 96, .65);
+      background: rgba(255, 92, 96, .14);
+      color: #7a1416;
+    }
+
+    .tag--warn {
+      border-color: rgba(254, 149, 43, .65);
+      background: rgba(254, 149, 43, .14);
+      color: #6a3a00;
+    }
+
+    .actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 14px;
+      padding: 11px 12px;
+      font-weight: 750;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, .10);
+      transition: transform .08s ease, filter .15s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.02) }
+    .btn:active { transform: translateY(0px) }
+    .btn:focus-visible { outline: none; box-shadow: var(--ring), 0 10px 20px rgba(0, 0, 0, .10) }
+
+    .btn--primary { background: linear-gradient(90deg, var(--azul-mar), var(--azul-mar-sombra)); color: #fff }
+    .btn--secondary { background: linear-gradient(90deg, var(--turquesa-rio), var(--turquesa-rio-sombra)); color: #00323b }
+    .btn--ghost { background: rgba(226, 229, 240, .55); color: var(--cinza-4); border: 1px solid rgba(68, 73, 92, .18); box-shadow: none }
+    .btn--danger { background: linear-gradient(90deg, var(--vermelho-pitanga), #ff3f44); color: #fff }
+
+    .btn[disabled] { opacity: .55; cursor: not-allowed; transform: none; filter: none }
+
+    .switch {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(68, 73, 92, .14);
+      background: rgba(226, 229, 240, .30);
+    }
+
+    .switch input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--vermelho-pitanga);
+    }
+
+    .switch label { margin: 0; color: var(--cinza-4); font-size: 13px; font-weight: 750 }
+
+    .error-panel {
+      display: none;
+      margin-top: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 92, 96, .45);
+      background: rgba(255, 92, 96, .10);
+      padding: 12px;
+      color: #7a1416;
+    }
+
+    .error-panel h4 { margin: 0 0 8px; font-size: 13px }
+    .error-panel ul { margin: 0; padding-left: 18px }
+
+    .help {
+      font-size: 12.5px;
+      color: var(--cinza-3);
+      margin-top: 6px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 720px) {
+      .two-col { grid-template-columns: 1fr }
+    }
+
+    .summary-fail {
+      border: 1px solid rgba(254, 149, 43, .35);
+      background: rgba(254, 149, 43, .08);
+      border-radius: var(--radius);
+      padding: 12px;
+    }
+
+    .summary-fail h3 { margin: 0 0 6px; font-size: 13px; color: #6a3a00 }
+    .summary-fail .empty { color: var(--cinza-3); font-size: 12.5px }
+    .summary-fail ul { margin: 8px 0 0; padding-left: 18px }
+
+    .footer-note {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--cinza-3);
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(226, 229, 240, .35);
+      border: 1px solid rgba(68, 73, 92, .12);
+    }
+
+    .mono { font-family: var(--mono) }
+
+    /* Print Layout */
+    .print-area { display: none }
+
+    @media print {
+      :root { color-scheme: light; }
+      body { background: #fff }
+      .wrap { padding: 0; max-width: none }
+      header.app-header, .grid, .no-print { display: none !important }
+      .print-area { display: block }
+
+      .print-page {
+        padding: 18mm 14mm;
+        font-family: var(--font);
+        color: #111;
+      }
+
+      .print-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: flex-start;
+        border-bottom: 2px solid rgba(0, 39, 189, .25);
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+      }
+
+      .print-brand { display: flex; gap: 10px; align-items: center }
+
+      .print-logo {
+        width: 30px;
+        height: 30px;
+        border-radius: 10px;
+        background: conic-gradient(from 180deg, var(--turquesa-rio), var(--azul-mar));
+      }
+
+      .print-title {
+        margin: 0;
+        font-size: 14px;
+        color: var(--azul-mar);
+        letter-spacing: .2px;
+      }
+
+      .print-sub { margin: 2px 0 0; font-size: 11px; color: #333 }
+
+      .print-badges {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .print-pill {
+        border: 1px solid rgba(0, 39, 189, .35);
+        background: rgba(23, 227, 203, .10);
+        color: var(--azul-mar);
+        border-radius: 999px;
+        padding: 5px 8px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .print-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .print-box {
+        border: 1px solid rgba(17, 23, 153, .18);
+        border-radius: 12px;
+        padding: 8px;
+        background: rgba(226, 229, 240, .25);
+      }
+
+      .print-box h4 { margin: 0 0 6px; font-size: 11.5px; color: var(--azul-mar) }
+
+      .print-kv { font-size: 11px; line-height: 1.35 }
+      .print-kv b { color: #111 }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-size: 10.5px;
+      }
+
+      th, td {
+        border: 1px solid rgba(68, 73, 92, .20);
+        padding: 6px;
+        vertical-align: top;
+      }
+
+      th {
+        background: rgba(0, 39, 189, .06);
+        color: #111;
+        text-align: left;
+      }
+
+      .print-summary {
+        margin-top: 10px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      /* Ajustes assinaturas (conforme solicitado) */
+      .print-sign {
+        margin-top: 16mm; /* 12mm -> 16mm */
+        page-break-inside: avoid;
+      }
+
+      .sig-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 10px } /* 18px -> 24px */
+
+      .sig {
+        min-height: 70px;              /* altura mínima garantida */
+        padding-top: 50px;             /* 6px -> 50px */
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-bottom: 8px;
+        border: 1px solid rgba(68, 73, 92, .20);
+        border-bottom: 1px solid #333; /* linha de assinatura */
+        border-radius: 10px;
+        background: rgba(226, 229, 240, .35); /* área sutil de assinatura */
+        font-size: 11px;
+      }
+
+      .watermark {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: .12;
+        transform: rotate(-25deg);
+        font-size: 52px;
+        font-weight: 900;
+        color: var(--vermelho-pitanga);
+        text-align: center;
+        line-height: 1.05;
+      }
+
+      .ncg-stamp {
+        position: fixed;
+        top: 12mm;
+        right: 12mm;
+        border: 3px solid var(--vermelho-pitanga);
+        color: var(--vermelho-pitanga);
+        padding: 8px 10px;
+        border-radius: 10px;
+        font-weight: 900;
+        font-size: 16px;
+        transform: rotate(8deg);
+        background: rgba(255, 92, 96, .06);
+        z-index: 9998;
+      }
+
+      .print-small { font-size: 10.5px }
+
+      .avoid-break { page-break-inside: avoid }
+      tr { page-break-inside: avoid }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="app-header no-print" aria-label="Cabeçalho do sistema">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Sistema de Monitoria (QA) – Guariroba</h1>
+          <p>Offline • 1 arquivo • Nota em tempo real • Impressão auditável (PDF via “Salvar como PDF”)</p>
+        </div>
+      </div>
+      <div class="row">
+        <span class="badge"><span aria-hidden="true">🧾</span> <span class="mono" id="idBadge">ID: —</span></span>
+        <span class="badge"><span aria-hidden="true">🕒</span> <span id="tsBadge">—</span></span>
+      </div>
+    </header>
+
+    <div class="grid">
+      <main class="left">
+        <section class="card" aria-label="Cabeçalho da monitoria">
+          <h2><span aria-hidden="true">📌</span> Cabeçalho da monitoria <span class="badge">Obrigatório para PDF FINAL</span></h2>
+
+          <div class="form-grid">
+            <div>
+              <label for="colabNome">Nome do colaborador *</label>
+              <input id="colabNome" type="text" autocomplete="name" placeholder="Ex.: Janice da Silva" />
+              <div class="help">Use o nome completo como consta no cadastro interno.</div>
+            </div>
+            <div>
+              <label for="colabEmail">E-mail do colaborador *</label>
+              <input id="colabEmail" type="email" autocomplete="email" placeholder="ex.: nome@empresa.com" />
+              <div class="help">O código do colaborador será o texto antes do “@”.</div>
+            </div>
+
+            <div>
+              <label for="monitorNome">Nome do monitor *</label>
+              <input id="monitorNome" type="text" placeholder="Ex.: Diogo" />
+            </div>
+            <div>
+              <label for="dtHora">Data e hora da monitoria (automática)</label>
+              <input id="dtHora" type="text" readonly aria-readonly="true" />
+            </div>
+
+            <div>
+              <label for="dtAtendimento">Data do atendimento *</label>
+              <input id="dtAtendimento" type="date" />
+            </div>
+            <div>
+              <label for="protocolo">Protocolo/OS *</label>
+              <input id="protocolo" type="text" placeholder="Ex.: 2026-000123 / OS 17885973" />
+              <div class="help">Campo-chave para auditoria e rastreio.</div>
+            </div>
+
+            <div>
+              <label for="monitoriaId">ID da monitoria (automático)</label>
+              <input id="monitoriaId" type="text" class="mono" readonly aria-readonly="true" />
+            </div>
+            <div>
+              <label for="servico">Serviço *</label>
+              <select id="servico" aria-label="Selecionar serviço">
+                <option value="">Selecione…</option>
+              </select>
+              <div class="help">Ao selecionar, as perguntas são carregadas automaticamente.</div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="two-col">
+            <div class="switch" role="group" aria-label="Não Conformidade Grave">
+              <input id="ncg" type="checkbox" />
+              <div>
+                <label for="ncg">NCG (Não Conformidade Grave) – zera a nota</label>
+                <div class="help">Se marcado, exige motivo e impacto e carimba “NCG” no PDF.</div>
+              </div>
+            </div>
+
+            <div class="card" style="padding:12px; border-radius:16px; box-shadow:none; border:1px dashed rgba(68,73,92,.22); background:rgba(226,229,240,.18)">
+              <label for="suggestedFilename">Sugestão de nome para salvar o PDF</label>
+              <input id="suggestedFilename" type="text" class="mono" readonly aria-readonly="true" />
+              <div class="help">Dica: a sugestão também vira o título do documento (ajuda no nome padrão do PDF no navegador).</div>
+            </div>
+          </div>
+
+          <div class="form-grid" id="ncgFields" style="display:none; margin-top:12px">
+            <div>
+              <label for="ncgMotivo">Motivo do NCG *</label>
+              <input id="ncgMotivo" type="text" placeholder="Texto curto e objetivo" />
+            </div>
+            <div>
+              <label for="ncgImpacto">Impacto (custo/cliente/empresa) *</label>
+              <input id="ncgImpacto" type="text" placeholder="Texto curto e objetivo" />
+            </div>
+          </div>
+        </section>
+
+        <section class="card" aria-label="Perguntas" style="margin-top:16px">
+          <h2><span aria-hidden="true">🧩</span> Perguntas do serviço <span class="badge" id="serviceBadge">Nenhum serviço selecionado</span></h2>
+
+          <div id="questionsEmpty" class="footer-note">
+            Selecione um serviço para começar. As respostas são em botões tipo <b>pill</b> (1 ativa por pergunta).
+          </div>
+
+          <div id="questions" class="q-list" role="list" aria-live="polite"></div>
+        </section>
+
+        <section class="card" aria-label="Falhas" style="margin-top:16px">
+          <h2><span aria-hidden="true">🧨</span> Resumo de falhas <span class="badge">NÃO / PARCIAL</span></h2>
+          <div class="summary-fail" id="failBox">
+            <div class="empty" id="failEmpty">Nenhuma falha registrada até agora.</div>
+            <ul id="failList" style="display:none"></ul>
+          </div>
+        </section>
+
+        <section class="card" aria-label="Campos finais" style="margin-top:16px">
+          <h2><span aria-hidden="true">📝</span> Campos finais (feedback)</h2>
+          <div class="form-grid">
+            <div>
+              <label for="obs">Observações (opcional)</label>
+              <textarea id="obs" placeholder="Registre contexto, evidências, pontos fortes e pontos de atenção…"></textarea>
+            </div>
+            <div>
+              <label for="plano">Plano de ação (opcional)</label>
+              <textarea id="plano" placeholder="Ações, prazos, responsáveis, alinhamentos…"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="card no-print" aria-label="Persistência" style="margin-top:16px">
+          <h2><span aria-hidden="true">💾</span> Rascunho offline (localStorage) <span class="badge">Opcional • Implementado</span></h2>
+          <div class="row">
+            <button class="btn btn--ghost" id="btnSaveDraft" type="button">Salvar rascunho</button>
+            <button class="btn btn--ghost" id="btnLoadDraft" type="button">Carregar rascunho</button>
+            <button class="btn btn--danger" id="btnClear" type="button">Limpar tudo</button>
+            <span class="tiny muted">* Salva cabeçalho, serviço, respostas, NCG, motivo/impacto, observações e plano de ação.</span>
+          </div>
+        </section>
+      </main>
+
+      <aside class="right" aria-label="Visor de nota">
+        <div class="visor" role="region" aria-label="Visor fixo de nota">
+          <h3>
+            <span>Visor de Nota (tempo real)</span>
+            <span class="badge" id="modeBadge">Modo: —</span>
+          </h3>
+
+          <div class="score-grid" aria-label="KPIs">
+            <div class="kpi">
+              <div class="label">Nota Real</div>
+              <div class="value" id="kpiReal">0,0%</div>
+            </div>
+            <div class="kpi">
+              <div class="label">Nota Final (múltiplo de 5)</div>
+              <div class="value" id="kpiFinal">0%</div>
+            </div>
+          </div>
+
+          <div class="progress" aria-label="Barra de progresso">
+            <div class="bar" id="bar"></div>
+          </div>
+
+          <div class="status" aria-label="Status">
+            <span class="tag tag--warn" id="statusTag">Pendente</span>
+            <span class="badge" id="denomBadge">Pesos considerados: 0</span>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="row" style="justify-content:space-between">
+            <div class="tiny muted">PARTIAL_FACTOR = <span class="mono">0.5</span> • WEIGHT_SCALE = <span class="mono">10</span></div>
+          </div>
+
+          <div class="error-panel" id="errors" aria-live="polite" aria-atomic="true">
+            <h4>Para gerar PDF FINAL, faltam:</h4>
+            <ul id="errorList"></ul>
+          </div>
+
+          <div class="actions no-print" aria-label="Ações">
+            <button class="btn btn--secondary" id="btnDraft" type="button">PDF RASCUNHO</button>
+            <button class="btn btn--primary" id="btnFinal" type="button">PDF FINAL</button>
+          </div>
+
+          <div class="footer-note no-print" id="printHint">
+            <b>Dica de auditoria:</b> ao abrir a janela de impressão, selecione <b>Salvar como PDF</b> e use o nome sugerido.
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- PRINT AREA -->
+    <section class="print-area" aria-hidden="true">
+      <div class="print-page" id="printPage">
+        <div id="watermark" class="watermark" style="display:none">RASCUNHO – INCOMPLETO</div>
+        <div id="ncgStamp" class="ncg-stamp" style="display:none">NCG</div>
+
+        <div class="print-header">
+          <div class="print-brand">
+            <div class="print-logo" aria-hidden="true"></div>
+            <div>
+              <h2 class="print-title">Monitoria de Qualidade (QA) – Guariroba</h2>
+              <p class="print-sub" id="printSub">—</p>
+            </div>
+          </div>
+          <div class="print-badges" aria-label="Selos">
+            <span class="print-pill" id="printId">ID: —</span>
+            <span class="print-pill" id="printWhen">Data/Hora: —</span>
+            <span class="print-pill" id="printMode">Tipo: —</span>
+          </div>
+        </div>
+
+        <div class="print-grid">
+          <div class="print-box">
+            <h4>Identificação</h4>
+            <div class="print-kv">
+              <div><b>Colaborador:</b> <span id="pColab">—</span></div>
+              <div><b>E-mail:</b> <span id="pEmail">—</span></div>
+              <div><b>Monitor:</b> <span id="pMonitor">—</span></div>
+            </div>
+          </div>
+          <div class="print-box">
+            <h4>Atendimento</h4>
+            <div class="print-kv">
+              <div><b>Serviço:</b> <span id="pServico">—</span></div>
+              <div><b>Data do atendimento:</b> <span id="pDtAt">—</span></div>
+              <div><b>Protocolo/OS:</b> <span id="pProt">—</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="print-grid" style="margin-top:10px">
+          <div class="print-box">
+            <h4>Resultado</h4>
+            <div class="print-kv">
+              <div><b>Nota Real:</b> <span id="pNotaReal">0,0%</span></div>
+              <div><b>Nota Final (múltiplo de 5):</b> <span id="pNotaFinal">0%</span></div>
+              <div><b>Status:</b> <span id="pStatus">—</span></div>
+            </div>
+          </div>
+          <div class="print-box" id="ncgBox" style="display:none">
+            <h4>NCG – Detalhes</h4>
+            <div class="print-kv">
+              <div><b>Motivo:</b> <span id="pNcgMotivo">—</span></div>
+              <div><b>Impacto:</b> <span id="pNcgImpacto">—</span></div>
+            </div>
+          </div>
+        </div>
+
+        <table class="avoid-break" aria-label="Tabela de auditoria">
+          <thead>
+            <tr>
+              <th style="width:40%">Pergunta</th>
+              <th style="width:14%">Resposta</th>
+              <th style="width:10%">Peso</th>
+              <th style="width:16%">Peso Considerado</th>
+              <th style="width:20%">Pontos Obtidos</th>
+            </tr>
+          </thead>
+          <tbody id="pTable"></tbody>
+        </table>
+
+        <div class="print-summary">
+          <div class="print-box">
+            <h4>Resumo de falhas (NÃO / PARCIAL)</h4>
+            <div class="print-kv print-small" id="pFalhas">—</div>
+          </div>
+          <div class="print-box">
+            <h4>Declaração de ciência</h4>
+            <div class="print-kv print-small">Declaro ciência do conteúdo desta monitoria.</div>
+          </div>
+        </div>
+
+        <div class="print-grid" style="margin-top:10px">
+          <div class="print-box">
+            <h4>Observações</h4>
+            <div class="print-kv print-small" id="pObs">—</div>
+          </div>
+          <div class="print-box">
+            <h4>Plano de ação</h4>
+            <div class="print-kv print-small" id="pPlano">—</div>
+          </div>
+        </div>
+
+        <div class="print-sign">
+          <div class="sig-row">
+            <div class="sig">Assinatura – Monitor</div>
+            <div class="sig">Assinatura – Colaborador</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // ===== CONSTANTS =====
+      const PARTIAL_FACTOR = 0.5;
+      const WEIGHT_SCALE = 10; // integer scaling
+      const DRAFT_STORAGE_KEY = 'GUAR_QA_MONITORIA_DRAFT_V3';
+
+      // ===== SERVICE DEFINITIONS (JSON) =====
+      const SERVICES = {
+        "Troca de titularidade": [
+          { id: "a1", text: "Atualização Cadastral", type: "YN", weight: 30 },
+          { id: "a2", text: "Documento Anexo", type: "YNP", weight: 20 },
+          { id: "a3", text: "Conferência de débitos do CPF do novo titular", type: "YN", weight: 20 },
+          { id: "a4", text: "Check list observado na matrícula", type: "YNP", weight: 15 },
+          { id: "a5", text: "Economia é a mesma do contrato", type: "YNP", weight: 15 }
+        ],
+        "Ligação Nova": [
+          { id: "b1", text: "Atualização Cadastral", type: "YN", weight: 30 },
+          { id: "b2", text: "Documento Anexo", type: "YNP", weight: 15 },
+          { id: "b3", text: "Conferência de débitos do CPF do novo titular", type: "YN", weight: 15 },
+          { id: "b4", text: "Check list observado na matrícula", type: "YNP", weight: 10 },
+          { id: "b5", text: "Economia é a mesma do contrato", type: "YNP", weight: 10 },
+          { id: "b6", text: "Termo de água assinado (se aplicável)", type: "YNNA", weight: 7.5 },
+          { id: "b7", text: "Termo de esgoto assinado (se aplicável)", type: "YNNA", weight: 7.5 },
+          { id: "b8", text: "Print do ArcGis (se aplicável)", type: "YNNA", weight: 2.5 },
+          { id: "b9", text: "Overlay (se aplicável)", type: "YNNA", weight: 2.5 }
+        ],
+        "Deslocamento de Cavalete": [
+          { id: "c1", text: "Atualização Cadastral", type: "YN", weight: 30 },
+          { id: "c2", text: "Valor do Serviço gerado de forma correta", type: "YN", weight: 30 },
+          { id: "c3", text: "Termo de água assinado", type: "YN", weight: 25 },
+          { id: "c4", text: "Documento do titular anexado (em caso de deslocamento +1 metro)", type: "YNNA", weight: 15 }
+        ],
+        "Consumo Final": [
+          { id: "d1", text: "Atualização Cadastral", type: "YN", weight: 30 },
+          { id: "d2", text: "Termo de Consumo Final Anexado", type: "YN", weight: 20 },
+          { id: "d3", text: "Encerramento gerado da forma correta: Diferença de consumo, guia de encerramento e tarifa fixa", type: "YN", weight: 25 },
+          { id: "d4", text: "Guia de encerramento quitada", type: "YN", weight: 15 },
+          { id: "d5", text: "Leitura observada no sistema e dados básicos no sistema", type: "YN", weight: 10 }
+        ],
+        "Parcelamento": [
+          { id: "e1", text: "Atualização Cadastral", type: "YN", weight: 30 },
+          { id: "e2", text: "Termo de parcelamento anexado no sistema junto com documento do cliente", type: "YN", weight: 25 },
+          { id: "e3", text: "Feito dentro da regra comercial de parcelamento", type: "YN", weight: 20 },
+          { id: "e4", text: "Comentário no GSS devidamente explicativo", type: "YN", weight: 15 },
+          { id: "e5", text: "Todos os valores foram estornados", type: "YN", weight: 10 }
+        ]
+      };
+
+      const RESPONSE_LABELS = {
+        YES: 'Sim',
+        NO: 'Não',
+        PARTIAL: 'Parcial',
+        NA: 'Não aplicável',
+        PENDING: 'PENDENTE'
+      };
+
+      // ===== UTILS =====
+      const Utils = {
+        pad2(n) { return String(n).padStart(2, '0'); },
+        pad4(n) { return String(n).padStart(4, '0'); },
+        formatDateTimeBR(d) {
+          const dd = this.pad2(d.getDate());
+          const mm = this.pad2(d.getMonth() + 1);
+          const yyyy = d.getFullYear();
+          const hh = this.pad2(d.getHours());
+          const mi = this.pad2(d.getMinutes());
+          return `${dd}/${mm}/${yyyy} ${hh}:${mi}`;
+        },
+        formatDateBRFromInput(value) {
+          if (!value) return '—';
+          const [y, m, d] = value.split('-');
+          if (!y || !m || !d) return '—';
+          return `${d}/${m}/${y}`;
+        },
+        sanitizeFilenameName(name) {
+          const noAcc = (name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+          const cleaned = noAcc.replace(/[^a-zA-Z0-9 _.-]+/g, ' ');
+          const collapsed = cleaned.replace(/\s+/g, ' ').trim();
+          return collapsed.slice(0, 40) || 'Colaborador';
+        },
+        sanitizeFilename(str) {
+          return this.sanitizeFilenameName(str || '');
+        },
+        computeRoundToNearest5(x) {
+          const scaled = x / 5;
+          const floor = Math.floor(scaled);
+          const frac = scaled - floor;
+          let rounded;
+          if (frac > 0.5) rounded = floor + 1;
+          else if (frac < 0.5) rounded = floor;
+          else rounded = floor + 1;
+          return rounded * 5;
+        },
+        isValidEmail(val) {
+          if (!val) return false;
+          const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return re.test(String(val).trim());
+        },
+        weightScaled(w) {
+          return Math.round(w * WEIGHT_SCALE);
+        },
+        answerFactor(ans) {
+          if (ans === RESPONSE_LABELS.YES) return 1;
+          if (ans === RESPONSE_LABELS.NO) return 0;
+          if (ans === RESPONSE_LABELS.PARTIAL) return PARTIAL_FACTOR;
+          if (ans === RESPONSE_LABELS.NA) return 0;
+          return null;
+        },
+        randomHex4() {
+          const v = Math.floor(Math.random() * 0x10000);
+          return this.pad4(v.toString(16).toUpperCase());
+        },
+        buildMonitoriaId(d) {
+          const yyyy = d.getFullYear();
+          const mm = this.pad2(d.getMonth() + 1);
+          const dd = this.pad2(d.getDate());
+          const hh = this.pad2(d.getHours());
+          const mi = this.pad2(d.getMinutes());
+          return `GUAR-${yyyy}${mm}${dd}-${hh}${mi}-${this.randomHex4()}`;
+        },
+        formatPercent1(x) {
+          const v = Math.round(x * 10) / 10;
+          return v.toFixed(1).replace('.', ',') + '%';
+        }
+      };
+
+      // ===== STATE =====
+      class AppState {
+        constructor() {
+          this._state = {
+            ts: new Date(),
+            id: '',
+            serviceName: '',
+            answers: {},
+            mode: '—'
+          };
+        }
+        get() { return this._state; }
+        set(patch) { this._state = { ...this._state, ...patch }; }
+      }
+
+      // ===== MAIN APP =====
+      class MonitoriaApp {
+        constructor() {
+          this.state = new AppState();
+
+          this.elements = {
+            idBadge: document.getElementById('idBadge'),
+            tsBadge: document.getElementById('tsBadge'),
+            dtHora: document.getElementById('dtHora'),
+            monitoriaId: document.getElementById('monitoriaId'),
+            servico: document.getElementById('servico'),
+            serviceBadge: document.getElementById('serviceBadge'),
+            questions: document.getElementById('questions'),
+            questionsEmpty: document.getElementById('questionsEmpty'),
+            bar: document.getElementById('bar'),
+            statusTag: document.getElementById('statusTag'),
+            denomBadge: document.getElementById('denomBadge'),
+            modeBadge: document.getElementById('modeBadge'),
+            errors: document.getElementById('errors'),
+            errorList: document.getElementById('errorList'),
+            btnDraft: document.getElementById('btnDraft'),
+            btnFinal: document.getElementById('btnFinal'),
+            btnSaveDraft: document.getElementById('btnSaveDraft'),
+            btnLoadDraft: document.getElementById('btnLoadDraft'),
+            btnClear: document.getElementById('btnClear'),
+            ncg: document.getElementById('ncg'),
+            ncgFields: document.getElementById('ncgFields'),
+            ncgMotivo: document.getElementById('ncgMotivo'),
+            ncgImpacto: document.getElementById('ncgImpacto'),
+            colabNome: document.getElementById('colabNome'),
+            colabEmail: document.getElementById('colabEmail'),
+            monitorNome: document.getElementById('monitorNome'),
+            dtAtendimento: document.getElementById('dtAtendimento'),
+            protocolo: document.getElementById('protocolo'),
+            obs: document.getElementById('obs'),
+            plano: document.getElementById('plano'),
+            suggestedFilename: document.getElementById('suggestedFilename'),
+            failEmpty: document.getElementById('failEmpty'),
+            failList: document.getElementById('failList'),
+            kpiReal: document.getElementById('kpiReal'),
+            kpiFinal: document.getElementById('kpiFinal'),
+
+            // Print
+            watermark: document.getElementById('watermark'),
+            ncgStamp: document.getElementById('ncgStamp'),
+            printSub: document.getElementById('printSub'),
+            printId: document.getElementById('printId'),
+            printWhen: document.getElementById('printWhen'),
+            printMode: document.getElementById('printMode'),
+            pColab: document.getElementById('pColab'),
+            pEmail: document.getElementById('pEmail'),
+            pMonitor: document.getElementById('pMonitor'),
+            pServico: document.getElementById('pServico'),
+            pDtAt: document.getElementById('pDtAt'),
+            pProt: document.getElementById('pProt'),
+            pNotaReal: document.getElementById('pNotaReal'),
+            pNotaFinal: document.getElementById('pNotaFinal'),
+            pStatus: document.getElementById('pStatus'),
+            ncgBox: document.getElementById('ncgBox'),
+            pNcgMotivo: document.getElementById('pNcgMotivo'),
+            pNcgImpacto: document.getElementById('pNcgImpacto'),
+            pTable: document.getElementById('pTable'),
+            pFalhas: document.getElementById('pFalhas'),
+            pObs: document.getElementById('pObs'),
+            pPlano: document.getElementById('pPlano')
+          };
+
+          this.init();
+        }
+
+        init() {
+          this.populateServiceSelect();
+          this.initIdAndTime();
+          this.setMode('—');
+          this.renderQuestions();
+          this.wireInputs();
+          this.updateScoreUI();
+
+          setInterval(() => {
+            this.elements.tsBadge.textContent = Utils.formatDateTimeBR(new Date());
+          }, 30000);
+        }
+
+        populateServiceSelect() {
+          const names = Object.keys(SERVICES);
+          for (const name of names) {
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = name;
+            this.elements.servico.appendChild(opt);
+          }
+        }
+
+        initIdAndTime() {
+          const d = new Date();
+          const id = Utils.buildMonitoriaId(d);
+          this.state.set({ ts: d, id });
+
+          this.elements.monitoriaId.value = id;
+          this.elements.dtHora.value = Utils.formatDateTimeBR(d);
+          this.elements.idBadge.textContent = `ID: ${id}`;
+          this.elements.tsBadge.textContent = Utils.formatDateTimeBR(d);
+          this.updateSuggestedFilename();
+        }
+
+        refreshTimestamp() {
+          const ts = new Date();
+          this.state.set({ ts });
+          this.elements.dtHora.value = Utils.formatDateTimeBR(ts);
+          this.elements.tsBadge.textContent = Utils.formatDateTimeBR(ts);
+          // mantém o mesmo ID para governança
+          this.elements.monitoriaId.value = this.state.get().id;
+          this.updateSuggestedFilename();
+        }
+
+        setMode(mode) {
+          this.state.set({ mode });
+          this.elements.modeBadge.textContent = `Modo: ${mode}`;
+        }
+
+        onServiceChange() {
+          const serviceName = this.elements.servico.value;
+          this.state.set({ serviceName, answers: {} });
+          this.renderQuestions();
+          this.updateSuggestedFilename();
+        }
+
+        getServiceQuestions() {
+          const currentState = this.state.get();
+          return SERVICES[currentState.serviceName] || [];
+        }
+
+        getOptionsForType(type) {
+          if (type === 'YN') return [RESPONSE_LABELS.YES, RESPONSE_LABELS.NO];
+          if (type === 'YNP') return [RESPONSE_LABELS.YES, RESPONSE_LABELS.NO, RESPONSE_LABELS.PARTIAL];
+          if (type === 'YNNA') return [RESPONSE_LABELS.YES, RESPONSE_LABELS.NO, RESPONSE_LABELS.NA];
+          return [RESPONSE_LABELS.YES, RESPONSE_LABELS.NO];
+        }
+
+        pillClassForAnswer(ans) {
+          if (ans === RESPONSE_LABELS.NO) return 'pill--no';
+          if (ans === RESPONSE_LABELS.PARTIAL) return 'pill--partial';
+          if (ans === RESPONSE_LABELS.NA) return 'pill--na';
+          return '';
+        }
+
+        clearQuestionsUI() {
+          this.elements.questions.innerHTML = '';
+        }
+
+        renderQuestions() {
+          this.clearQuestionsUI();
+
+          const currentState = this.state.get();
+          if (!currentState.serviceName) {
+            this.elements.questionsEmpty.style.display = 'block';
+            this.elements.serviceBadge.textContent = 'Nenhum serviço selecionado';
+            this.updateScoreUI();
+            return;
+          }
+
+          this.elements.questionsEmpty.style.display = 'none';
+          this.elements.serviceBadge.textContent = currentState.serviceName;
+
+          const qs = this.getServiceQuestions();
+          for (const q of qs) {
+            const item = document.createElement('div');
+            item.className = 'q-item';
+            item.setAttribute('role', 'listitem');
+            item.dataset.qid = q.id;
+
+            const top = document.createElement('div');
+            top.className = 'q-top';
+
+            const title = document.createElement('p');
+            title.className = 'q-title';
+            title.textContent = q.text;
+
+            const meta = document.createElement('div');
+            meta.className = 'q-meta';
+            meta.innerHTML = `<span class=\"chip\"><strong>Peso</strong>: ${q.weight}</span> <span class=\"chip chip--pending\" id=\"chip-${q.id}\">Resposta: <strong class=\"mono\" id=\"ans-${q.id}\">PENDENTE</strong></span>`;
+
+            top.appendChild(title);
+            top.appendChild(meta);
+
+            const pillset = document.createElement('div');
+            pillset.className = 'pillset';
+            pillset.setAttribute('role', 'group');
+            pillset.setAttribute('aria-label', `Respostas para: ${q.text}`);
+
+            const opts = this.getOptionsForType(q.type);
+            for (const opt of opts) {
+              const b = document.createElement('button');
+              b.type = 'button';
+              b.className = `pill ${this.pillClassForAnswer(opt)}`;
+              b.textContent = opt;
+              b.setAttribute('aria-pressed', 'false');
+              b.dataset.value = opt;
+              b.dataset.qid = q.id;
+              b.tabIndex = 0;
+
+              b.addEventListener('click', () => this.setAnswer(q.id, opt));
+
+              b.addEventListener('keydown', (ev) => {
+                const keys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+                if (!keys.includes(ev.key)) return;
+                ev.preventDefault();
+                const pills = Array.from(pillset.querySelectorAll('button.pill'));
+                const idx = pills.indexOf(b);
+                const dir = (ev.key === 'ArrowLeft' || ev.key === 'ArrowUp') ? -1 : 1;
+                let next = idx + dir;
+                if (next < 0) next = pills.length - 1;
+                if (next >= pills.length) next = 0;
+                pills[next].focus();
+              });
+
+              pillset.appendChild(b);
+            }
+
+            const foot = document.createElement('div');
+            foot.className = 'q-foot';
+
+            const consideredChip = document.createElement('span');
+            consideredChip.className = 'chip';
+            consideredChip.id = `cons-${q.id}`;
+            consideredChip.innerHTML = `Peso considerado: <strong class=\"mono\">${Utils.weightScaled(q.weight)}</strong>`;
+
+            const ptsChip = document.createElement('span');
+            ptsChip.className = 'chip';
+            ptsChip.id = `pts-${q.id}`;
+            ptsChip.innerHTML = `Pontos (item): <strong class=\"mono\">0</strong>`;
+
+            foot.appendChild(consideredChip);
+            foot.appendChild(ptsChip);
+
+            item.appendChild(top);
+            item.appendChild(pillset);
+            item.appendChild(foot);
+
+            this.elements.questions.appendChild(item);
+
+            const existing = (currentState.answers || {})[q.id];
+            if (existing) {
+              this.setAnswer(q.id, existing, { silent: true });
+            } else {
+              this.updateQuestionChips(q.id);
+            }
+          }
+
+          this.updateScoreUI();
+        }
+
+        updateQuestionChips(qid) {
+          const currentState = this.state.get();
+          const ans = (currentState.answers || {})[qid];
+
+          const ansEl = document.getElementById(`ans-${qid}`);
+          const chip = document.getElementById(`chip-${qid}`);
+
+          if (ansEl) ansEl.textContent = ans ? ans : RESPONSE_LABELS.PENDING;
+          if (chip) {
+            chip.classList.remove('chip--pending');
+            if (!ans) chip.classList.add('chip--pending');
+          }
+        }
+
+        setAnswer(qid, ans, opts = {}) {
+          const currentState = this.state.get();
+          const answers = { ...(currentState.answers || {}) };
+          answers[qid] = ans;
+          this.state.set({ answers });
+
+          const container = this.elements.questions.querySelector(`[data-qid=\"${qid}\"]`);
+          if (container) {
+            const pills = Array.from(container.querySelectorAll('button.pill'));
+            for (const p of pills) {
+              const pressed = (p.dataset.value === ans);
+              p.setAttribute('aria-pressed', pressed ? 'true' : 'false');
+            }
+          }
+
+          this.updateQuestionChips(qid);
+          this.updateScoreUI();
+
+          if (!opts.silent) {
+            // noop
+          }
+        }
+
+        toggleNcgFields() {
+          const on = this.elements.ncg.checked;
+          this.elements.ncgFields.style.display = on ? 'grid' : 'none';
+          this.updateScoreUI();
+        }
+
+        requiredHeaderMissing() {
+          const errors = [];
+          if (!this.elements.colabNome.value.trim()) errors.push('Nome do colaborador');
+          if (!Utils.isValidEmail(this.elements.colabEmail.value.trim())) errors.push('E-mail do colaborador (válido)');
+          if (!this.elements.monitorNome.value.trim()) errors.push('Nome do monitor');
+          if (!this.elements.dtAtendimento.value) errors.push('Data do atendimento');
+          if (!this.elements.protocolo.value.trim()) errors.push('Protocolo/OS');
+          if (!this.elements.servico.value) errors.push('Serviço');
+          return errors;
+        }
+
+        requiredQuestionsMissing() {
+          const missing = [];
+          const currentState = this.state.get();
+          const qs = this.getServiceQuestions();
+          for (const q of qs) {
+            const ans = (currentState.answers || {})[q.id];
+            if (!ans) missing.push(q.text);
+          }
+          return missing;
+        }
+
+        requiredNcgMissing() {
+          const miss = [];
+          if (this.elements.ncg.checked) {
+            if (!this.elements.ncgMotivo.value.trim()) miss.push('Motivo do NCG');
+            if (!this.elements.ncgImpacto.value.trim()) miss.push('Impacto do NCG');
+          }
+          return miss;
+        }
+
+        setErrorsPanel(list) {
+          this.elements.errorList.innerHTML = '';
+          if (!list.length) {
+            this.elements.errors.style.display = 'none';
+            return;
+          }
+          for (const item of list) {
+            const li = document.createElement('li');
+            li.textContent = item;
+            this.elements.errorList.appendChild(li);
+          }
+          this.elements.errors.style.display = 'block';
+        }
+
+        collectAllErrorsForFinal() {
+          const missing = [];
+          const header = this.requiredHeaderMissing();
+          for (const h of header) missing.push(`Cabeçalho: ${h}`);
+
+          const currentState = this.state.get();
+          if (currentState.serviceName) {
+            const qmiss = this.requiredQuestionsMissing();
+            for (const q of qmiss) missing.push(`Pergunta sem resposta: ${q}`);
+          }
+
+          const ncg = this.requiredNcgMissing();
+          for (const n of ncg) missing.push(`NCG: ${n}`);
+
+          return missing;
+        }
+
+        showErrorsForFinal() {
+          const errs = this.collectAllErrorsForFinal();
+          this.setErrorsPanel(errs);
+          return errs.length === 0;
+        }
+
+        statusFromCompleteness() {
+          const currentState = this.state.get();
+          const serviceOk = !!currentState.serviceName;
+          if (this.elements.ncg.checked) return { tag: 'NCG – NOTA ZERADA', kind: 'ncg' };
+          if (!serviceOk) return { tag: 'Pendente', kind: 'warn' };
+          const missingH = this.requiredHeaderMissing();
+          const missingQ = this.requiredQuestionsMissing();
+          if (missingH.length || missingQ.length) return { tag: 'Pendente', kind: 'warn' };
+          return { tag: 'Conforme', kind: 'ok' };
+        }
+
+        updateStatusTag() {
+          const st = this.statusFromCompleteness();
+          this.elements.statusTag.classList.remove('tag--ok', 'tag--warn', 'tag--ncg');
+          if (st.kind === 'ok') this.elements.statusTag.classList.add('tag--ok');
+          if (st.kind === 'warn') this.elements.statusTag.classList.add('tag--warn');
+          if (st.kind === 'ncg') this.elements.statusTag.classList.add('tag--ncg');
+          this.elements.statusTag.textContent = st.tag;
+        }
+
+        calcScore() {
+          const currentState = this.state.get();
+
+          if (this.elements.ncg.checked) {
+            return {
+              possible: 0,
+              obtained: 0,
+              real: 0,
+              rounded: 0,
+              denomWeight: 0,
+              perItem: []
+            };
+          }
+
+          const qs = this.getServiceQuestions();
+          let possible = 0;
+          let obtained = 0;
+          let denomWeight = 0;
+          const perItem = [];
+
+          for (const q of qs) {
+            const wScaled = Utils.weightScaled(q.weight);
+            const ans = (currentState.answers || {})[q.id];
+            const isNA = ans === RESPONSE_LABELS.NA;
+            const considered = isNA ? 0 : wScaled;
+            const factor = Utils.answerFactor(ans);
+
+            const consideredForCalc = (ans ? considered : wScaled);
+            const factorForCalc = (ans ? factor : 0);
+
+            possible += consideredForCalc;
+            denomWeight += consideredForCalc;
+
+            const pts = Math.round(consideredForCalc * factorForCalc);
+            obtained += pts;
+
+            perItem.push({
+              id: q.id,
+              text: q.text,
+              weight: q.weight,
+              weightScaled: wScaled,
+              considered: consideredForCalc,
+              answer: ans || null,
+              factor: factorForCalc,
+              obtained: pts
+            });
+          }
+
+          const real = possible > 0 ? (obtained / possible) * 100 : 0;
+          const rounded = Utils.computeRoundToNearest5(real);
+
+          return { possible, obtained, real, rounded, denomWeight, perItem };
+        }
+
+        updateFailsUI(scoreObj) {
+          const qs = this.getServiceQuestions();
+          const currentState = this.state.get();
+          const fails = [];
+
+          for (const q of qs) {
+            const ans = (currentState.answers || {})[q.id];
+            if (ans === RESPONSE_LABELS.NO || ans === RESPONSE_LABELS.PARTIAL) {
+              const wScaled = Utils.weightScaled(q.weight);
+              const considered = wScaled;
+              const factor = (ans === RESPONSE_LABELS.NO) ? 0 : PARTIAL_FACTOR;
+              const obtained = Math.round(considered * factor);
+              fails.push({
+                text: q.text,
+                ans,
+                weight: q.weight,
+                obtained
+              });
+            }
+          }
+
+          if (!fails.length) {
+            this.elements.failEmpty.style.display = 'block';
+            this.elements.failList.style.display = 'none';
+            this.elements.failList.innerHTML = '';
+          } else {
+            this.elements.failEmpty.style.display = 'none';
+            this.elements.failList.style.display = 'block';
+            this.elements.failList.innerHTML = '';
+            for (const f of fails) {
+              const li = document.createElement('li');
+              li.textContent = `${f.text} — ${f.ans} (peso ${f.weight} | pontos ${f.obtained})`;
+              this.elements.failList.appendChild(li);
+            }
+          }
+
+          if (scoreObj && scoreObj.perItem) {
+            for (const item of scoreObj.perItem) {
+              const ptsEl = document.getElementById(`pts-${item.id}`);
+              const consEl = document.getElementById(`cons-${item.id}`);
+              if (ptsEl) {
+                const strong = ptsEl.querySelector('strong');
+                if (strong) strong.textContent = String(item.obtained);
+              }
+              if (consEl) {
+                const strong = consEl.querySelector('strong');
+                if (strong) strong.textContent = String(item.considered);
+              }
+            }
+          }
+        }
+
+        // ✅ Ajuste #1: nome sugerido vira também o document.title (Chrome usa no nome padrão do PDF)
+        updateSuggestedFilename() {
+          const currentState = this.state.get();
+
+          const email = (this.elements.colabEmail.value || '').trim().toLowerCase();
+          const codeRaw = email.includes('@') ? email.split('@')[0] : '';
+          const code = Utils.sanitizeFilename(codeRaw || this.elements.colabNome.value || 'Colaborador');
+
+          const service = Utils.sanitizeFilename(currentState.serviceName || 'Servico');
+
+          const d = currentState.ts || new Date();
+          const dd = Utils.pad2(d.getDate());
+          const mm = Utils.pad2(d.getMonth() + 1);
+          const yy = String(d.getFullYear()).slice(-2);
+          const hh = Utils.pad2(d.getHours());
+          const mi = Utils.pad2(d.getMinutes());
+
+          const id = currentState.id || 'GUAR-XXXXXXXX-XXXX-XXXX';
+          const id4 = id.slice(-4);
+
+          const filename = `Monitoria de Serviços - ${code} - ${service} - ${dd}-${mm}-${yy} - ${hh}${mi} - ${id4}.pdf`;
+          this.elements.suggestedFilename.value = filename;
+
+          // ajuda a governança no print (nome sugerido do PDF no navegador)
+          document.title = filename.replace(/\.pdf$/i, '');
+        }
+
+        updateScoreUI() {
+          const s = this.calcScore();
+
+          this.elements.kpiReal.textContent = Utils.formatPercent1(s.real);
+          this.elements.kpiFinal.textContent = `${s.rounded}%`;
+          this.elements.bar.style.width = `${Math.max(0, Math.min(100, s.real))}%`;
+          this.elements.denomBadge.textContent = `Pesos considerados: ${s.denomWeight}`;
+
+          this.updateStatusTag();
+          this.updateFailsUI(s);
+          this.updateSuggestedFilename();
+
+          this.elements.modeBadge.textContent = `Modo: ${this.state.get().mode}`;
+        }
+
+        buildPrintData(mode) {
+          const currentState = this.state.get();
+          const score = this.calcScore();
+
+          this.elements.printSub.textContent = `Documento de auditoria e alinhamento com o colaborador.`;
+          this.elements.printId.textContent = `ID: ${currentState.id}`;
+          this.elements.printWhen.textContent = `Data/Hora: ${Utils.formatDateTimeBR(currentState.ts)}`;
+          this.elements.printMode.textContent = `Tipo: ${mode}`;
+
+          this.elements.pColab.textContent = (this.elements.colabNome.value.trim() || '—');
+          this.elements.pEmail.textContent = (this.elements.colabEmail.value.trim() || '—');
+          this.elements.pMonitor.textContent = (this.elements.monitorNome.value.trim() || '—');
+          this.elements.pServico.textContent = (currentState.serviceName || '—');
+          this.elements.pDtAt.textContent = Utils.formatDateBRFromInput(this.elements.dtAtendimento.value);
+          this.elements.pProt.textContent = (this.elements.protocolo.value.trim() || '—');
+
+          const status = this.statusFromCompleteness();
+          this.elements.pStatus.textContent = status.tag;
+
+          if (this.elements.ncg.checked) {
+            this.elements.ncgStamp.style.display = 'block';
+            this.elements.ncgBox.style.display = 'block';
+            this.elements.pNcgMotivo.textContent = this.elements.ncgMotivo.value.trim() || '—';
+            this.elements.pNcgImpacto.textContent = this.elements.ncgImpacto.value.trim() || '—';
+          } else {
+            this.elements.ncgStamp.style.display = 'none';
+            this.elements.ncgBox.style.display = 'none';
+          }
+
+          this.elements.watermark.style.display = (mode === 'RASCUNHO') ? 'flex' : 'none';
+
+          this.elements.pNotaReal.textContent = Utils.formatPercent1(score.real);
+          this.elements.pNotaFinal.textContent = `${score.rounded}%`;
+
+          this.elements.pTable.innerHTML = '';
+          const qs = this.getServiceQuestions();
+
+          for (const q of qs) {
+            const ans = (currentState.answers || {})[q.id] || (mode === 'RASCUNHO' ? RESPONSE_LABELS.PENDING : '—');
+            const considered = (ans === RESPONSE_LABELS.NA) ? 0 : Utils.weightScaled(q.weight);
+
+            let factor;
+            if (ans === RESPONSE_LABELS.YES) factor = 1;
+            else if (ans === RESPONSE_LABELS.NO) factor = 0;
+            else if (ans === RESPONSE_LABELS.PARTIAL) factor = PARTIAL_FACTOR;
+            else if (ans === RESPONSE_LABELS.PENDING) factor = 0;
+            else factor = 0;
+
+            const obtained = Math.round(considered * factor);
+
+            const tr = document.createElement('tr');
+            const tdQ = document.createElement('td');
+            const tdA = document.createElement('td');
+            const tdW = document.createElement('td');
+            const tdC = document.createElement('td');
+            const tdO = document.createElement('td');
+
+            tdQ.textContent = q.text;
+            tdA.textContent = ans;
+            tdW.textContent = String(q.weight);
+            tdC.textContent = String(considered);
+            tdO.textContent = String(obtained);
+
+            tr.appendChild(tdQ);
+            tr.appendChild(tdA);
+            tr.appendChild(tdW);
+            tr.appendChild(tdC);
+            tr.appendChild(tdO);
+            this.elements.pTable.appendChild(tr);
+          }
+
+          const fails = [];
+          for (const q of qs) {
+            const ans = (currentState.answers || {})[q.id];
+            if (ans === RESPONSE_LABELS.NO || ans === RESPONSE_LABELS.PARTIAL) {
+              const considered = Utils.weightScaled(q.weight);
+              const factor = (ans === RESPONSE_LABELS.NO) ? 0 : PARTIAL_FACTOR;
+              const obtained = Math.round(considered * factor);
+              fails.push(`• ${q.text} — ${ans} (peso ${q.weight} | pontos ${obtained})`);
+            }
+          }
+
+          this.elements.pFalhas.textContent = fails.length ? fails.join('\n') : 'Nenhuma falha (NÃO/PARCIAL).';
+          this.elements.pFalhas.style.whiteSpace = 'pre-line';
+
+          this.elements.pObs.textContent = this.elements.obs.value.trim() || '—';
+          this.elements.pPlano.textContent = this.elements.plano.value.trim() || '—';
+        }
+
+        printDraft() {
+          this.setMode('RASCUNHO');
+          this.setErrorsPanel([]);
+          this.refreshTimestamp();
+          this.buildPrintData('RASCUNHO');
+          window.print();
+        }
+
+        printFinal() {
+          this.setMode('FINAL');
+          this.refreshTimestamp();
+
+          const ok = this.showErrorsForFinal();
+          if (!ok) {
+            this.elements.errors.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            return;
+          }
+
+          this.buildPrintData('FINAL');
+          window.print();
+        }
+
+        saveDraft() {
+          const currentState = this.state.get();
+
+          const payload = {
+            version: 3,
+            savedAt: new Date().toISOString(),
+            id: currentState.id,
+            ts: currentState.ts.toISOString(),
+            header: {
+              colabNome: this.elements.colabNome.value,
+              colabEmail: this.elements.colabEmail.value,
+              monitorNome: this.elements.monitorNome.value,
+              dtAtendimento: this.elements.dtAtendimento.value,
+              protocolo: this.elements.protocolo.value
+            },
+            serviceName: currentState.serviceName,
+            answers: currentState.answers,
+            ncg: {
+              on: this.elements.ncg.checked,
+              motivo: this.elements.ncgMotivo.value,
+              impacto: this.elements.ncgImpacto.value
+            },
+            finais: {
+              obs: this.elements.obs.value,
+              plano: this.elements.plano.value
+            }
+          };
+
+          localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(payload));
+          this.elements.btnSaveDraft.textContent = 'Rascunho salvo ✓';
+          setTimeout(() => (this.elements.btnSaveDraft.textContent = 'Salvar rascunho'), 1200);
+        }
+
+        loadDraft() {
+          const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
+          if (!raw) {
+            this.elements.btnLoadDraft.textContent = 'Nada salvo';
+            setTimeout(() => (this.elements.btnLoadDraft.textContent = 'Carregar rascunho'), 1200);
+            return;
+          }
+
+          try {
+            const payload = JSON.parse(raw);
+            if (!payload || payload.version !== 3) throw new Error('Versão inválida');
+
+            const ts = payload.ts ? new Date(payload.ts) : new Date();
+            const id = payload.id || Utils.buildMonitoriaId(ts);
+
+            this.state.set({
+              ts,
+              id,
+              serviceName: payload.serviceName || '',
+              answers: payload.answers || {}
+            });
+
+            this.elements.monitoriaId.value = id;
+            this.elements.dtHora.value = Utils.formatDateTimeBR(ts);
+            this.elements.idBadge.textContent = `ID: ${id}`;
+            this.elements.tsBadge.textContent = Utils.formatDateTimeBR(ts);
+
+            this.elements.colabNome.value = payload.header?.colabNome || '';
+            this.elements.colabEmail.value = payload.header?.colabEmail || '';
+            this.elements.monitorNome.value = payload.header?.monitorNome || '';
+            this.elements.dtAtendimento.value = payload.header?.dtAtendimento || '';
+            this.elements.protocolo.value = payload.header?.protocolo || '';
+
+            this.elements.servico.value = payload.serviceName || '';
+
+            this.elements.ncg.checked = !!payload.ncg?.on;
+            this.elements.ncgMotivo.value = payload.ncg?.motivo || '';
+            this.elements.ncgImpacto.value = payload.ncg?.impacto || '';
+            this.toggleNcgFields();
+
+            this.elements.obs.value = payload.finais?.obs || '';
+            this.elements.plano.value = payload.finais?.plano || '';
+
+            this.renderQuestions();
+            this.updateScoreUI();
+
+            this.elements.btnLoadDraft.textContent = 'Rascunho carregado ✓';
+            setTimeout(() => (this.elements.btnLoadDraft.textContent = 'Carregar rascunho'), 1200);
+          } catch (e) {
+            this.elements.btnLoadDraft.textContent = 'Erro ao carregar';
+            setTimeout(() => (this.elements.btnLoadDraft.textContent = 'Carregar rascunho'), 1200);
+          }
+        }
+
+        clearAll() {
+          const ok = confirm('Confirmar: deseja limpar todos os campos e respostas?');
+          if (!ok) return;
+
+          this.initIdAndTime();
+
+          this.elements.colabNome.value = '';
+          this.elements.colabEmail.value = '';
+          this.elements.monitorNome.value = '';
+          this.elements.dtAtendimento.value = '';
+          this.elements.protocolo.value = '';
+          this.elements.servico.value = '';
+          this.elements.obs.value = '';
+          this.elements.plano.value = '';
+          this.elements.ncg.checked = false;
+          this.elements.ncgMotivo.value = '';
+          this.elements.ncgImpacto.value = '';
+          this.toggleNcgFields();
+
+          this.state.set({ serviceName: '', answers: {} });
+
+          this.clearQuestionsUI();
+          this.elements.questionsEmpty.style.display = 'block';
+          this.elements.serviceBadge.textContent = 'Nenhum serviço selecionado';
+          this.setErrorsPanel([]);
+
+          this.updateScoreUI();
+        }
+
+        wireInputs() {
+          this.elements.servico.addEventListener('change', () => this.onServiceChange());
+          this.elements.ncg.addEventListener('change', () => this.toggleNcgFields());
+
+          const recalcInputs = [
+            this.elements.colabNome,
+            this.elements.colabEmail,
+            this.elements.monitorNome,
+            this.elements.dtAtendimento,
+            this.elements.protocolo,
+            this.elements.dtAtendimento,
+            this.elements.ncgMotivo,
+            this.elements.ncgImpacto,
+            this.elements.obs,
+            this.elements.plano
+          ];
+
+          for (const i of recalcInputs) {
+            i.addEventListener('input', () => {
+              this.updateScoreUI();
+              if (this.state.get().mode === 'FINAL') this.showErrorsForFinal();
+            });
+          }
+
+          this.elements.btnDraft.addEventListener('click', () => this.printDraft());
+          this.elements.btnFinal.addEventListener('click', () => this.printFinal());
+          this.elements.btnSaveDraft.addEventListener('click', () => this.saveDraft());
+          this.elements.btnLoadDraft.addEventListener('click', () => this.loadDraft());
+          this.elements.btnClear.addEventListener('click', () => this.clearAll());
+        }
+      }
+
+      new MonitoriaApp();
+    })();
+  </script>
+</body>
+</html>
