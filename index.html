@@ -1841,6 +1841,7 @@
           const ok = confirm('Confirmar: deseja limpar todos os campos e respostas?');
           if (!ok) return;
 
+          this.setMode('—');
           this.initIdAndTime();
 
           this.elements.colabNome.value = '';
@@ -1876,7 +1877,6 @@
             this.elements.monitorNome,
             this.elements.dtAtendimento,
             this.elements.protocolo,
-            this.elements.dtAtendimento,
             this.elements.ncgMotivo,
             this.elements.ncgImpacto,
             this.elements.obs,
