@@ -1,884 +1,778 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
   <title>Monitoria de Serviços</title>
+
   <style>
-    :root {
+    :root{
       /* PALETA OFICIAL “GUARIROBA” */
-      --turquesa-rio: #17E3CB;
-      --azul-mar: #0027BD;
-      --turquesa-rio-sombra: #9DEEE7;
-      --azul-mar-sombra: #111799;
+      --turquesa-rio:#17E3CB;
+      --azul-mar:#0027BD;
+      --turquesa-rio-sombra:#9DEEE7;
+      --azul-mar-sombra:#111799;
+      --branco:#FFFFFF;
+      --cinza-1:#E2E5F0;
+      --cinza-2:#8C91A4;
+      --cinza-3:#44495C;
+      --cinza-4:#191B23;
+      --amarelo-pequi:#F8DC00;
+      --laranja-da-baia:#FE952B;
+      --vermelho-pitanga:#FF5C60;
+      --magenta-pitaia:#E12379;
+      --roxo-acai:#A11FFF;
+      --rosa-goiaba:#FF8FE1;
+      --marrom-claro-cacau:#AD6547;
+      --marrom-escuro-cafe:#332727;
 
-      --branco: #FFFFFF;
-      --cinza-1: #E2E5F0;
-      --cinza-2: #8C91A4;
-      --cinza-3: #44495C;
-      --cinza-4: #191B23;
+      /* UI sério / maduro */
+      --radius:18px;
+      --radius-sm:14px;
+      --shadow: 0 18px 40px rgba(25,27,35,.08);
+      --shadow-soft: 0 10px 26px rgba(25,27,35,.06);
+      --ring: 0 0 0 3px rgba(0,39,189,.18);
 
-      --amarelo-pequi: #F8DC00;
-      --laranja-da-baia: #FE952B;
-      --vermelho-pitanga: #FF5C60;
-      --magenta-pitaia: #E12379;
-      --roxo-acai: #A11FFF;
-      --rosa-goiaba: #FF8FE1;
-      --marrom-claro-cacau: #AD6547;
-      --marrom-escuro-cafe: #332727;
-
-      --radius: 18px;
-      --radius-sm: 12px;
-      --shadow: 0 10px 30px rgba(0, 0, 0, .10);
-      --shadow-soft: 0 6px 18px rgba(0, 0, 0, .08);
-      --ring: 0 0 0 3px rgba(23, 227, 203, .25);
-
-      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
-      --bg: linear-gradient(180deg, #ffffff 0%, #f7f8fc 100%);
+      --page-bg: #F6F7FB;
+      --card-bg: #FFFFFF;
+      --border: rgba(25,27,35,.10);
+      --border-strong: rgba(25,27,35,.16);
+      --text: #111318;
+      --text-2: #2B2F3A;
+      --muted: #5B6376;
+      --muted-2: #7A8297;
+
+      --primary: var(--azul-mar);
+      --primary-2: var(--azul-mar-sombra);
+      --accent: var(--turquesa-rio);
+      --danger: var(--vermelho-pitanga);
+      --warn: var(--laranja-da-baia);
     }
 
-    * { box-sizing: border-box }
-    html, body { height: 100% }
-
-    body {
-      margin: 0;
-      font-family: var(--font);
-      color: var(--cinza-4);
-      background: var(--bg);
+    @media (prefers-reduced-motion: reduce){
+      *{transition:none !important; animation:none !important; scroll-behavior:auto !important}
     }
 
-    a { color: inherit }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:var(--font);color:var(--text);background:var(--page-bg)}
 
-    .wrap {
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 24px 18px 120px;
+    .sr-only{
+      position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+      clip:rect(0,0,0,0);white-space:nowrap;border:0
     }
-
-    header.app-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    .brand {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .logo {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      background: conic-gradient(from 180deg, var(--turquesa-rio), var(--azul-mar));
+    .skip-link{
+      position:absolute;left:12px;top:10px;
+      background: var(--card-bg);
+      color: var(--text);
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:10px 12px;
       box-shadow: var(--shadow-soft);
+      transform: translateY(-140%);
+      z-index:9999;
+    }
+    .skip-link:focus{transform: translateY(0); outline:none; box-shadow: var(--ring)}
+
+    .wrap{max-width:1200px;margin:0 auto;padding:22px 18px 120px}
+
+    /* Top bar */
+    .topbar{
+      position:sticky;top:0;z-index:20;
+      background: rgba(246,247,251,.82);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(25,27,35,.08);
+    }
+    .topbar-inner{
+      max-width:1200px;margin:0 auto;padding:14px 18px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px
     }
 
-    .brand h1 {
-      margin: 0;
-      font-size: 18px;
-      letter-spacing: .2px;
-      line-height: 1.2;
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:38px;height:38px;border-radius:14px;
+      background: linear-gradient(145deg, rgba(0,39,189,.95), rgba(23,227,203,.95));
+      box-shadow: 0 12px 26px rgba(0,39,189,.14);
+    }
+    .brand .t{display:flex;flex-direction:column;gap:2px}
+    .brand h1{margin:0;font-size:14px;letter-spacing:.25px;color:var(--text)}
+    .brand p{margin:0;font-size:12px;color:var(--muted)}
+
+    .top-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+    .pillmeta{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      background: rgba(255,255,255,.72);
+      border:1px solid rgba(25,27,35,.10);
+      box-shadow: 0 10px 22px rgba(25,27,35,.05);
+      font-size:12px;color:var(--text-2)
+    }
+    .mono{font-family:var(--mono)}
+
+    /* Botão (pillmeta) */
+    .pillmeta-btn{
+      cursor:pointer;
+      font: inherit;
+      color: inherit;
+      border: 1px solid rgba(25,27,35,.10);
+    }
+    .pillmeta-btn:focus-visible{
+      outline:none;
+      box-shadow: var(--ring);
     }
 
-    .brand p {
-      margin: 4px 0 0;
-      color: var(--cinza-3);
-      font-size: 12.5px;
-    }
+    .grid{display:grid;grid-template-columns: 1.25fr .75fr;gap:16px;align-items:start;margin-top:16px}
+    @media (max-width: 980px){.grid{grid-template-columns:1fr}}
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 16px;
-      align-items: start;
-    }
-
-    @media (max-width: 980px) {
-      .grid { grid-template-columns: 1fr }
-    }
-
-    .card {
-      background: var(--branco);
-      border: 1px solid rgba(17, 23, 153, .10);
-      border-radius: var(--radius);
+    .card{
+      background:var(--card-bg);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
       box-shadow: var(--shadow-soft);
-      padding: 16px;
+      padding:16px;
     }
 
-    .card h2 {
-      margin: 0 0 10px;
-      font-size: 14px;
-      color: var(--azul-mar);
-      letter-spacing: .25px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .card h2{
+      margin:0 0 12px;
+      font-size:13px;
+      letter-spacing:.25px;
+      color: rgba(0,39,189,.92);
+      display:flex;align-items:center;gap:10px;
     }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      background: rgba(23, 227, 203, .10);
-      color: var(--azul-mar);
-      border: 1px solid rgba(23, 227, 203, .35);
-      white-space: nowrap;
+    .badge{
+      display:inline-flex;align-items:center;
+      padding:6px 10px;border-radius:999px;
+      font-size:11.5px;
+      color: rgba(0,39,189,.92);
+      border: 1px solid rgba(0,39,189,.18);
+      background: rgba(0,39,189,.05);
+      white-space:nowrap;
+    }
+    .badge--warn{
+      color:#6a3a00;
+      border-color: rgba(254,149,43,.45);
+      background: rgba(254,149,43,.10);
     }
 
-    .muted { color: var(--cinza-3) }
-    .tiny { font-size: 12px }
+    .muted{color:var(--muted)}
+    .tiny{font-size:12px;color:var(--muted)}
+    .req{color: var(--danger); font-weight:900}
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width: 720px){.form-grid{grid-template-columns:1fr}}
+
+    label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
+
+    input[type="text"],input[type="email"],input[type="date"],textarea,select{
+      width:100%;border-radius:14px;
+      border:1px solid rgba(25,27,35,.14);
+      padding:11px 12px;font-size:14px;
+      outline:none;background:#fff;
+      transition: box-shadow .15s ease, border-color .15s ease, transform .08s ease;
+      color:var(--text)
     }
 
-    @media (max-width: 720px) {
-      .form-grid { grid-template-columns: 1fr }
+    input[readonly]{
+      background: linear-gradient(180deg, rgba(226,229,240,.55), rgba(226,229,240,.22));
+      border-color: rgba(25,27,35,.10);
+      color: var(--muted)
     }
 
-    label {
-      display: block;
-      font-size: 12.5px;
-      color: var(--cinza-3);
-      margin: 0 0 6px;
+    textarea{min-height:96px;resize:vertical}
+    input:focus, textarea:focus, select:focus{border-color: rgba(0,39,189,.34);box-shadow: var(--ring)}
+
+    .is-invalid{
+      border-color: rgba(255,92,96,.65) !important;
+      box-shadow: 0 0 0 3px rgba(255,92,96,.14) !important;
     }
 
-    input[type="text"],
-    input[type="email"],
-    input[type="date"],
-    textarea,
-    select {
-      width: 100%;
-      border-radius: 14px;
-      border: 1px solid rgba(68, 73, 92, .22);
-      padding: 11px 12px;
-      font-size: 14px;
-      outline: none;
-      background: #fff;
-      transition: box-shadow .15s ease, border-color .15s ease;
+    .divider{height:1px;background: rgba(25,27,35,.10);margin:14px 0}
+
+    /* Modo (radio pills) */
+    .flag-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .flag{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:10px 12px;border-radius:999px;
+      border:1px solid rgba(25,27,35,.14);
+      background: rgba(246,247,251,.65);
+      user-select:none;
+      cursor:pointer;
+    }
+    .flag input{width:18px;height:18px}
+    .flag span{font-size:13px;font-weight:750;color:var(--text-2)}
+    #modeNcg{accent-color: var(--danger)}
+    #modeNcs{accent-color: var(--warn)}
+    #modeNormal{accent-color: var(--accent)}
+
+    /* Questions */
+    .q-list{display:flex;flex-direction:column;gap:12px}
+    .q-item{
+      border:1px solid rgba(25,27,35,.10);
+      border-radius:var(--radius);
+      padding:12px;
+      background: linear-gradient(180deg, rgba(246,247,251,.72), rgba(255,255,255,1));
     }
 
-    input[readonly] {
-      background: linear-gradient(180deg, rgba(226, 229, 240, .55), rgba(226, 229, 240, .25));
-      border-color: rgba(68, 73, 92, .18);
-      color: var(--cinza-3);
+    .q-top{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+    .q-title{margin:0;font-size:14px;font-weight:750;color:var(--text)}
+
+    .q-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 10px;border-radius:999px;
+      border:1px solid rgba(25,27,35,.12);
+      background: rgba(246,247,251,.80);
+      color: var(--muted)
     }
+    .chip strong{color:var(--text-2)}
 
-    textarea { min-height: 96px; resize: vertical }
-
-    input:focus, textarea:focus, select:focus {
-      border-color: rgba(0, 39, 189, .45);
-      box-shadow: var(--ring);
-    }
-
-    .row {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .divider {
-      height: 1px;
-      background: rgba(68, 73, 92, .12);
-      margin: 14px 0;
-    }
-
-    /* Pills */
-    .q-list { display: flex; flex-direction: column; gap: 12px }
-
-    .q-item {
-      border: 1px solid rgba(68, 73, 92, .14);
-      border-radius: var(--radius);
-      padding: 12px;
-      background: linear-gradient(180deg, rgba(226, 229, 240, .22), rgba(255, 255, 255, .85));
-    }
-
-    .q-top {
-      display: flex;
-      gap: 10px;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-    }
-
-    .q-title {
-      font-weight: 650;
-      letter-spacing: .1px;
-      font-size: 14px;
-      margin: 0;
-    }
-
-    .q-meta {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-      color: var(--cinza-3);
-      font-size: 12px;
-    }
-
-    .pillset { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px }
-
-    .pill {
-      border: 1px solid rgba(68, 73, 92, .22);
-      background: #fff;
-      color: var(--cinza-4);
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 13px;
-      cursor: pointer;
-      user-select: none;
-      transition: transform .08s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
-    }
-
-    .pill:hover { transform: translateY(-1px); box-shadow: 0 8px 16px rgba(0, 0, 0, .08) }
-    .pill:active { transform: translateY(0px) }
-
-    .pill[aria-pressed="true"] {
-      border-color: rgba(0, 39, 189, .55);
-      box-shadow: var(--ring);
-      background: linear-gradient(180deg, rgba(23, 227, 203, .22), rgba(23, 227, 203, .08));
-    }
-
-    .pill--no[aria-pressed="true"] {
-      border-color: rgba(255, 92, 96, .65);
-      background: linear-gradient(180deg, rgba(255, 92, 96, .18), rgba(255, 92, 96, .08));
-      box-shadow: 0 0 0 3px rgba(255, 92, 96, .18);
-    }
-
-    .pill--partial[aria-pressed="true"] {
-      border-color: rgba(254, 149, 43, .70);
-      background: linear-gradient(180deg, rgba(254, 149, 43, .18), rgba(254, 149, 43, .08));
-      box-shadow: 0 0 0 3px rgba(254, 149, 43, .18);
-    }
-
-    .pill--na[aria-pressed="true"] {
-      border-color: rgba(140, 145, 164, .75);
-      background: linear-gradient(180deg, rgba(140, 145, 164, .22), rgba(140, 145, 164, .10));
-      box-shadow: 0 0 0 3px rgba(140, 145, 164, .18);
-    }
-
-    .pill:focus-visible {
-      outline: none;
-      box-shadow: var(--ring);
-    }
-
-    .q-foot {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 10px;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      border: 1px solid rgba(68, 73, 92, .18);
-      background: rgba(226, 229, 240, .35);
-      color: var(--cinza-3);
-      white-space: nowrap;
-    }
-
-    .chip strong { color: var(--cinza-4) }
-
-    .chip--pending {
-      border-color: rgba(254, 149, 43, .45);
-      background: rgba(254, 149, 43, .12);
+    .chip--pending{
+      border-color: rgba(254,149,43,.35);
+      background: rgba(254,149,43,.10);
       color: #6a3a00;
     }
 
-    .chip--ncg {
-      border-color: rgba(255, 92, 96, .55);
-      background: rgba(255, 92, 96, .12);
-      color: #7a1416;
+    .pillset{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .pill{
+      border:1px solid rgba(25,27,35,.14);
+      background:#fff;
+      color:var(--text);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:13px;
+      cursor:pointer;
+      transition: transform .08s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .pill:hover{transform:translateY(-1px);box-shadow:0 10px 18px rgba(25,27,35,.07)}
+    .pill:active{transform:translateY(0)}
+    .pill:focus-visible{outline:none;box-shadow: var(--ring)}
+
+    /* Radio semantics */
+    .pill[role="radio"][aria-checked="true"]{
+      border-color: rgba(0,39,189,.45);
+      box-shadow: var(--ring);
+      background: rgba(0,39,189,.06);
+    }
+    .pill--no[role="radio"][aria-checked="true"]{
+      border-color: rgba(255,92,96,.55);
+      box-shadow: 0 0 0 3px rgba(255,92,96,.14);
+      background: rgba(255,92,96,.08);
+    }
+    .pill--partial[role="radio"][aria-checked="true"]{
+      border-color: rgba(254,149,43,.60);
+      box-shadow: 0 0 0 3px rgba(254,149,43,.14);
+      background: rgba(254,149,43,.08);
+    }
+    .pill--na[role="radio"][aria-checked="true"]{
+      border-color: rgba(140,145,164,.70);
+      box-shadow: 0 0 0 3px rgba(140,145,164,.14);
+      background: rgba(140,145,164,.10);
     }
 
-    /* Visor fixo */
-    .visor {
-      position: sticky;
-      top: 14px;
-      padding: 16px;
-      border-radius: var(--radius);
-      background: radial-gradient(1200px 240px at 10% 0%, rgba(23, 227, 203, .18), transparent 40%),
-                  radial-gradient(1200px 240px at 90% 0%, rgba(0, 39, 189, .16), transparent 45%),
-                  #fff;
-      border: 1px solid rgba(0, 39, 189, .12);
+    .q-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+
+    /* Evidence (novo - essencial para QA) */
+    .evidence{
+      margin-top:10px;
+      padding:10px;
+      border-radius:14px;
+      border:1px solid rgba(25,27,35,.10);
+      background: rgba(246,247,251,.85);
+      display:none;
+    }
+    .evidence.is-open{display:block}
+    .evidence textarea{min-height:70px}
+    .evidence .hint{margin-top:6px;font-size:12px;color:var(--muted)}
+    .evidence .hint b{color:var(--text)}
+
+    /* Summary */
+    .summary-fail{
+      border:1px solid rgba(254,149,43,.22);
+      background: rgba(254,149,43,.07);
+      border-radius:var(--radius);
+      padding:12px;
+    }
+    .summary-fail .empty{color:var(--muted);font-size:12.5px}
+    .summary-fail ul{margin:8px 0 0;padding-left:18px}
+
+    .footer-note{
+      margin-top:10px;
+      font-size:12px;
+      color:var(--muted);
+      padding:10px 12px;
+      border-radius:14px;
+      background: rgba(246,247,251,.85);
+      border:1px solid rgba(25,27,35,.10);
+    }
+
+    /* Visor */
+    .visor{
+      position:sticky;top:72px;
+      padding:16px;
+      border-radius:var(--radius);
+      background: #fff;
+      border: 1px solid rgba(25,27,35,.10);
       box-shadow: var(--shadow);
     }
 
-    .visor h3 {
-      margin: 0;
-      font-size: 14px;
-      color: var(--azul-mar);
-      letter-spacing: .2px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+    .visor h3{margin:0;font-size:13px;color:var(--text);letter-spacing:.2px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+
+    .score-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+
+    .kpi{
+      border-radius:16px;
+      padding:12px;
+      background: rgba(246,247,251,.85);
+      border:1px solid rgba(25,27,35,.10);
     }
 
-    .score-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 12px;
+    .kpi .label{font-size:12px;color:var(--muted)}
+    .kpi .value{font-size:22px;font-weight:900;letter-spacing:.2px;margin-top:4px;color:var(--text)}
+
+    .progress{height:10px;border-radius:999px;background: rgba(226,229,240,.75);overflow:hidden;border:1px solid rgba(25,27,35,.08);margin-top:10px}
+    .bar{height:100%;width:0%;background: linear-gradient(90deg, rgba(0,39,189,.95), rgba(23,227,203,.95));transition:width .15s ease}
+
+    .status{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+
+    .tag{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid rgba(25,27,35,.14);
+      background: rgba(246,247,251,.70);
+      font-weight:850;font-size:12px;color:var(--text)
     }
 
-    .kpi {
-      border-radius: 16px;
-      padding: 12px;
-      background: rgba(226, 229, 240, .35);
-      border: 1px solid rgba(68, 73, 92, .10);
-    }
+    .tag--ok{border-color: rgba(23,227,203,.40);background: rgba(23,227,203,.10);color: rgba(0,39,189,.95)}
+    .tag--warn{border-color: rgba(254,149,43,.50);background: rgba(254,149,43,.12);color:#6a3a00}
+    .tag--ncg{border-color: rgba(255,92,96,.55);background: rgba(255,92,96,.12);color:#7a1416}
+    .tag--simple{border-color: rgba(254,149,43,.55);background: rgba(254,149,43,.12);color:#6a3a00}
 
-    .kpi .label { font-size: 12px; color: var(--cinza-3) }
-    .kpi .value { font-size: 22px; font-weight: 800; letter-spacing: .2px; margin-top: 4px }
-
-    .progress {
-      height: 10px;
-      border-radius: 999px;
-      background: rgba(226, 229, 240, .85);
-      overflow: hidden;
-      border: 1px solid rgba(68, 73, 92, .10);
-      margin-top: 10px;
-    }
-
-    .bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--turquesa-rio), var(--azul-mar));
-      transition: width .15s ease;
-    }
-
-    .status {
-      margin-top: 12px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .status .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(68, 73, 92, .18);
-      background: rgba(255, 255, 255, .7);
-      font-weight: 700;
-      font-size: 12.5px;
-    }
-
-    .tag--ok {
-      border-color: rgba(23, 227, 203, .45);
-      color: var(--azul-mar);
-      background: rgba(23, 227, 203, .10);
-    }
-
-    .tag--ncg {
-      border-color: rgba(255, 92, 96, .65);
-      background: rgba(255, 92, 96, .14);
-      color: #7a1416;
-    }
-
-    .tag--warn {
-      border-color: rgba(254, 149, 43, .65);
-      background: rgba(254, 149, 43, .14);
-      color: #6a3a00;
-    }
-
-    .actions {
-      margin-top: 12px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      border: none;
-      border-radius: 14px;
-      padding: 11px 12px;
-      font-weight: 750;
-      font-size: 13px;
-      cursor: pointer;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, .10);
+    .actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      border:none;border-radius:14px;padding:11px 12px;
+      font-weight:850;font-size:13px;cursor:pointer;
       transition: transform .08s ease, filter .15s ease;
     }
+    .btn:hover{transform:translateY(-1px);filter:brightness(1.02)}
+    .btn:active{transform:translateY(0)}
+    .btn:focus-visible{outline:none;box-shadow: var(--ring)}
 
-    .btn:hover { transform: translateY(-1px); filter: brightness(1.02) }
-    .btn:active { transform: translateY(0px) }
-    .btn:focus-visible { outline: none; box-shadow: var(--ring), 0 10px 20px rgba(0, 0, 0, .10) }
+    .btn--primary{background: linear-gradient(90deg, rgba(0,39,189,.96), rgba(17,23,153,.96)); color:#fff; box-shadow: 0 16px 28px rgba(0,39,189,.16)}
+    .btn--secondary{background: rgba(23,227,203,.18); color: rgba(0,39,189,.95); border:1px solid rgba(23,227,203,.32)}
+    .btn--ghost{background: rgba(246,247,251,.90); color: var(--text); border:1px solid rgba(25,27,35,.12)}
+    .btn--danger{background: linear-gradient(90deg, rgba(255,92,96,.98), rgba(255,63,68,.98)); color:#fff; box-shadow: 0 16px 28px rgba(255,92,96,.16)}
 
-    .btn--primary { background: linear-gradient(90deg, var(--azul-mar), var(--azul-mar-sombra)); color: #fff }
-    .btn--secondary { background: linear-gradient(90deg, var(--turquesa-rio), var(--turquesa-rio-sombra)); color: #00323b }
-    .btn--ghost { background: rgba(226, 229, 240, .55); color: var(--cinza-4); border: 1px solid rgba(68, 73, 92, .18); box-shadow: none }
-    .btn--danger { background: linear-gradient(90deg, var(--vermelho-pitanga), #ff3f44); color: #fff }
+    .error-panel{
+      display:none;margin-top:12px;border-radius:16px;
+      border:1px solid rgba(255,92,96,.38);
+      background: rgba(255,92,96,.08);
+      padding:12px;color:#7a1416
+    }
+    .error-panel h4{margin:0 0 8px;font-size:13px}
+    .error-panel ul{margin:0;padding-left:18px}
 
-    .btn[disabled] { opacity: .55; cursor: not-allowed; transform: none; filter: none }
+    .print-area{display:none}
 
-    .switch {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-top: 12px;
-      padding: 10px 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(68, 73, 92, .14);
-      background: rgba(226, 229, 240, .30);
+    /* Print */
+    @media print{
+      :root{color-scheme:light}
+      body{background:#fff}
+      .topbar, .grid, .no-print{display:none !important}
+      .wrap{padding:0;max-width:none}
+      .print-area{display:block}
+
+      .print-page{padding:18mm 14mm;font-family:var(--font);color:#111}
+
+      .print-header{
+        display:flex;justify-content:space-between;gap:12px;align-items:flex-start;
+        border-bottom:2px solid rgba(0,39,189,.25);
+        padding-bottom:10px;margin-bottom:10px
+      }
+
+      .print-brand{display:flex;gap:10px;align-items:center}
+      .print-logo{width:30px;height:30px;border-radius:10px;background: conic-gradient(from 180deg, var(--turquesa-rio), var(--azul-mar))}
+      .print-title{margin:0;font-size:14px;color:var(--azul-mar);letter-spacing:.2px}
+      .print-sub{margin:2px 0 0;font-size:11px;color:#333}
+
+      .print-badges{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+      .print-pill{border:1px solid rgba(0,39,189,.35);background: rgba(23,227,203,.10);color:var(--azul-mar);border-radius:999px;padding:5px 8px;font-size:11px;font-weight:700}
+
+      .print-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+      .print-box{border:1px solid rgba(17,23,153,.18);border-radius:12px;padding:8px;background: rgba(226,229,240,.25)}
+      .print-box h4{margin:0 0 6px;font-size:11.5px;color:var(--azul-mar)}
+      .print-kv{font-size:11px;line-height:1.35}
+      .print-kv b{color:#111}
+
+      table{width:100%;border-collapse:collapse;margin-top:10px;font-size:10.5px}
+      th,td{border:1px solid rgba(68,73,92,.20);padding:6px;vertical-align:top}
+      th{background: rgba(0,39,189,.06);color:#111;text-align:left}
+
+      .print-summary{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+      .print-sign{margin-top:16mm;page-break-inside:avoid}
+      .sig-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:10px}
+      .sig{
+        min-height:70px;padding-top:50px;padding-left:10px;padding-right:10px;padding-bottom:8px;
+        border:1px solid rgba(68,73,92,.20);
+        border-bottom:1px solid #333;
+        border-radius:10px;
+        background: rgba(226,229,240,.35);
+        font-size:11px;
+      }
+
+      .watermark{
+        position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+        pointer-events:none;z-index:9999;opacity:.12;transform: rotate(-25deg);
+        font-size:52px;font-weight:900;color: var(--vermelho-pitanga);text-align:center;line-height:1.05
+      }
+
+      .ncg-stamp{
+        position:fixed;top:12mm;right:12mm;
+        border:3px solid var(--vermelho-pitanga);color:var(--vermelho-pitanga);
+        padding:8px 10px;border-radius:10px;font-weight:900;font-size:16px;
+        transform: rotate(8deg);background: rgba(255,92,96,.06);z-index:9998
+      }
+
+      .ncs-stamp{
+        position:fixed;top:12mm;left:12mm;
+        border:3px solid var(--laranja-da-baia);
+        color:#6a3a00;
+        padding:8px 10px;border-radius:10px;font-weight:900;font-size:15px;
+        transform: rotate(-7deg);background: rgba(254,149,43,.10);z-index:9997
+      }
+
+      .avoid-break{page-break-inside:avoid}
+      tr{page-break-inside:avoid}
     }
 
-    .switch input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--vermelho-pitanga);
+    /* ===========================
+       THEME TOGGLE (manual)
+       =========================== */
+    html[data-theme="light"]{
+      color-scheme: light;
+
+      --page-bg: #F6F7FB;
+      --card-bg: #FFFFFF;
+      --border: rgba(25,27,35,.10);
+      --border-strong: rgba(25,27,35,.16);
+      --text: #111318;
+      --text-2: #2B2F3A;
+      --muted: #5B6376;
+      --muted-2: #7A8297;
+      --shadow-soft: 0 10px 26px rgba(25,27,35,.06);
+      --shadow: 0 18px 40px rgba(25,27,35,.08);
+      --ring: 0 0 0 3px rgba(0,39,189,.18);
     }
 
-    .switch label { margin: 0; color: var(--cinza-4); font-size: 13px; font-weight: 750 }
+    html[data-theme="dark"]{
+      color-scheme: dark;
 
-    .error-panel {
-      display: none;
-      margin-top: 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 92, 96, .45);
-      background: rgba(255, 92, 96, .10);
-      padding: 12px;
-      color: #7a1416;
+      --page-bg: #0E1118;
+      --card-bg: #141927;
+      --border: rgba(255,255,255,.10);
+      --border-strong: rgba(255,255,255,.16);
+      --text: #F2F4F8;
+      --text-2: #E5E9F2;
+      --muted: #A9B1C6;
+      --muted-2: #9AA3BC;
+      --shadow-soft: 0 10px 26px rgba(0,0,0,.35);
+      --shadow: 0 18px 40px rgba(0,0,0,.40);
+      --ring: 0 0 0 3px rgba(23,227,203,.18);
     }
 
-    .error-panel h4 { margin: 0 0 8px; font-size: 13px }
-    .error-panel ul { margin: 0; padding-left: 18px }
+    html[data-theme="dark"] .topbar{
+      background: rgba(14,17,24,.72);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    html[data-theme="dark"] .visor{ background: var(--card-bg); }
+    html[data-theme="dark"] .kpi{ background: rgba(255,255,255,.05); }
 
-    .help {
-      font-size: 12.5px;
-      color: var(--cinza-3);
-      margin-top: 6px;
+    /* ===========================
+       FIX CONTRASTE (tema escuro)
+       =========================== */
+    html[data-theme="dark"] input[type="text"]:not([readonly]),
+    html[data-theme="dark"] input[type="email"]:not([readonly]),
+    html[data-theme="dark"] input[type="date"]:not([readonly]),
+    html[data-theme="dark"] textarea,
+    html[data-theme="dark"] select{
+      /* texto legível em campo claro */
+      color: #111318 !important;
+      caret-color: #111318;
+      /* garante ícones/controles (date/select) com aparência de tema claro */
+      color-scheme: light;
     }
 
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+    html[data-theme="dark"] input[type="text"]:not([readonly])::placeholder,
+    html[data-theme="dark"] input[type="email"]:not([readonly])::placeholder,
+    html[data-theme="dark"] input[type="date"]:not([readonly])::placeholder,
+    html[data-theme="dark"] textarea::placeholder{
+      color: rgba(25,27,35,.45) !important;
     }
 
-    @media (max-width: 720px) {
-      .two-col { grid-template-columns: 1fr }
-    }
-
-    .summary-fail {
-      border: 1px solid rgba(254, 149, 43, .35);
-      background: rgba(254, 149, 43, .08);
-      border-radius: var(--radius);
-      padding: 12px;
-    }
-
-    .summary-fail h3 { margin: 0 0 6px; font-size: 13px; color: #6a3a00 }
-    .summary-fail .empty { color: var(--cinza-3); font-size: 12.5px }
-    .summary-fail ul { margin: 8px 0 0; padding-left: 18px }
-
-    .footer-note {
-      margin-top: 10px;
-      font-size: 12px;
-      color: var(--cinza-3);
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: rgba(226, 229, 240, .35);
-      border: 1px solid rgba(68, 73, 92, .12);
-    }
-
-    .mono { font-family: var(--mono) }
-
-    /* Print Layout */
-    .print-area { display: none }
-
-    @media print {
-      :root { color-scheme: light; }
-      body { background: #fff }
-      .wrap { padding: 0; max-width: none }
-      header.app-header, .grid, .no-print { display: none !important }
-      .print-area { display: block }
-
-      .print-page {
-        padding: 18mm 14mm;
-        font-family: var(--font);
-        color: #111;
-      }
-
-      .print-header {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        align-items: flex-start;
-        border-bottom: 2px solid rgba(0, 39, 189, .25);
-        padding-bottom: 10px;
-        margin-bottom: 10px;
-      }
-
-      .print-brand { display: flex; gap: 10px; align-items: center }
-
-      .print-logo {
-        width: 30px;
-        height: 30px;
-        border-radius: 10px;
-        background: conic-gradient(from 180deg, var(--turquesa-rio), var(--azul-mar));
-      }
-
-      .print-title {
-        margin: 0;
-        font-size: 14px;
-        color: var(--azul-mar);
-        letter-spacing: .2px;
-      }
-
-      .print-sub { margin: 2px 0 0; font-size: 11px; color: #333 }
-
-      .print-badges {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-      }
-
-      .print-pill {
-        border: 1px solid rgba(0, 39, 189, .35);
-        background: rgba(23, 227, 203, .10);
-        color: var(--azul-mar);
-        border-radius: 999px;
-        padding: 5px 8px;
-        font-size: 11px;
-        font-weight: 700;
-      }
-
-      .print-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-top: 10px;
-      }
-
-      .print-box {
-        border: 1px solid rgba(17, 23, 153, .18);
-        border-radius: 12px;
-        padding: 8px;
-        background: rgba(226, 229, 240, .25);
-      }
-
-      .print-box h4 { margin: 0 0 6px; font-size: 11.5px; color: var(--azul-mar) }
-
-      .print-kv { font-size: 11px; line-height: 1.35 }
-      .print-kv b { color: #111 }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-        font-size: 10.5px;
-      }
-
-      th, td {
-        border: 1px solid rgba(68, 73, 92, .20);
-        padding: 6px;
-        vertical-align: top;
-      }
-
-      th {
-        background: rgba(0, 39, 189, .06);
-        color: #111;
-        text-align: left;
-      }
-
-      .print-summary {
-        margin-top: 10px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-      }
-
-      /* Ajustes assinaturas (conforme solicitado) */
-      .print-sign {
-        margin-top: 16mm; /* 12mm -> 16mm */
-        page-break-inside: avoid;
-      }
-
-      .sig-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 10px } /* 18px -> 24px */
-
-      .sig {
-        min-height: 70px;              /* altura mínima garantida */
-        padding-top: 50px;             /* 6px -> 50px */
-        padding-left: 10px;
-        padding-right: 10px;
-        padding-bottom: 8px;
-        border: 1px solid rgba(68, 73, 92, .20);
-        border-bottom: 1px solid #333; /* linha de assinatura */
-        border-radius: 10px;
-        background: rgba(226, 229, 240, .35); /* área sutil de assinatura */
-        font-size: 11px;
-      }
-
-      .watermark {
-        position: fixed;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        pointer-events: none;
-        z-index: 9999;
-        opacity: .12;
-        transform: rotate(-25deg);
-        font-size: 52px;
-        font-weight: 900;
-        color: var(--vermelho-pitanga);
-        text-align: center;
-        line-height: 1.05;
-      }
-
-      .ncg-stamp {
-        position: fixed;
-        top: 12mm;
-        right: 12mm;
-        border: 3px solid var(--vermelho-pitanga);
-        color: var(--vermelho-pitanga);
-        padding: 8px 10px;
-        border-radius: 10px;
-        font-weight: 900;
-        font-size: 16px;
-        transform: rotate(8deg);
-        background: rgba(255, 92, 96, .06);
-        z-index: 9998;
-      }
-
-      .print-small { font-size: 10.5px }
-
-      .avoid-break { page-break-inside: avoid }
-      tr { page-break-inside: avoid }
+    /* Autofill (Chrome) — evita texto claro em fundo claro */
+    html[data-theme="dark"] input:-webkit-autofill,
+    html[data-theme="dark"] textarea:-webkit-autofill,
+    html[data-theme="dark"] select:-webkit-autofill{
+      -webkit-text-fill-color: #111318 !important;
+      box-shadow: 0 0 0px 1000px rgba(255,255,255,.96) inset !important;
     }
   </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <header class="app-header no-print" aria-label="Cabeçalho do sistema">
-      <div class="brand">
+  <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+  <div class="topbar no-print">
+    <div class="topbar-inner">
+      <div class="brand" aria-label="Marca">
         <div class="logo" aria-hidden="true"></div>
-        <div>
-          <h1>Sistema de Monitoria (QA) – Guariroba</h1>
-          <p>Offline • 1 arquivo • Nota em tempo real • Impressão auditável (PDF via “Salvar como PDF”)</p>
+        <div class="t">
+          <h1>Monitoria de Serviços (QA) – Guariroba</h1>
+          <p>Offline • 1 arquivo • PDF via impressão • Export JSON</p>
         </div>
       </div>
-      <div class="row">
-        <span class="badge"><span aria-hidden="true">🧾</span> <span class="mono" id="idBadge">ID: —</span></span>
-        <span class="badge"><span aria-hidden="true">🕒</span> <span id="tsBadge">—</span></span>
+
+      <div class="top-meta" aria-label="Metadados">
+        <span class="pillmeta"><span aria-hidden="true">🧾</span> <span class="mono" id="idBadge">ID: —</span></span>
+        <span class="pillmeta"><span aria-hidden="true">🕒</span> <span id="tsBadge">—</span></span>
+        <button class="pillmeta pillmeta-btn" id="themeToggle" type="button" aria-label="Alternar tema" title="Alternar tema">🌙 Escuro</button>
       </div>
-    </header>
+    </div>
+  </div>
 
-    <div class="grid">
-      <main class="left">
-        <section class="card" aria-label="Cabeçalho da monitoria">
-          <h2><span aria-hidden="true">📌</span> Cabeçalho da monitoria <span class="badge">Obrigatório para PDF FINAL</span></h2>
+  <div class="wrap">
+    <noscript>
+      <div class="card" style="border-color:rgba(255,92,96,.5);background:rgba(255,92,96,.08)">
+        Este formulário precisa de JavaScript habilitado para calcular nota, salvar rascunho e gerar PDF.
+      </div>
+    </noscript>
 
-          <div class="form-grid">
-            <div>
-              <label for="colabNome">Nome do colaborador *</label>
-              <input id="colabNome" type="text" autocomplete="name" placeholder="Ex.: Janice da Silva" />
-              <div class="help">Use o nome completo como consta no cadastro interno.</div>
-            </div>
-            <div>
-              <label for="colabEmail">E-mail do colaborador *</label>
-              <input id="colabEmail" type="email" autocomplete="email" placeholder="ex.: nome@empresa.com" />
-              <div class="help">O código do colaborador será o texto antes do “@”.</div>
-            </div>
+    <form id="qaForm">
+      <div class="grid">
+        <main id="main">
+          <section class="card" aria-label="Cabeçalho da monitoria">
+            <h2>📌 Cabeçalho <span class="badge">Obrigatório (PDF FINAL)</span></h2>
 
-            <div>
-              <label for="monitorNome">Nome do monitor *</label>
-              <input id="monitorNome" type="text" placeholder="Ex.: Diogo" />
-            </div>
-            <div>
-              <label for="dtHora">Data e hora da monitoria (automática)</label>
-              <input id="dtHora" type="text" readonly aria-readonly="true" />
-            </div>
-
-            <div>
-              <label for="dtAtendimento">Data do atendimento *</label>
-              <input id="dtAtendimento" type="date" />
-            </div>
-            <div>
-              <label for="protocolo">Protocolo/OS *</label>
-              <input id="protocolo" type="text" placeholder="Ex.: 2026-000123 / OS 17885973" />
-              <div class="help">Campo-chave para auditoria e rastreio.</div>
-            </div>
-
-            <div>
-              <label for="monitoriaId">ID da monitoria (automático)</label>
-              <input id="monitoriaId" type="text" class="mono" readonly aria-readonly="true" />
-            </div>
-            <div>
-              <label for="servico">Serviço *</label>
-              <select id="servico" aria-label="Selecionar serviço">
-                <option value="">Selecione…</option>
-              </select>
-              <div class="help">Ao selecionar, as perguntas são carregadas automaticamente.</div>
-            </div>
-          </div>
-
-          <div class="divider"></div>
-
-          <div class="two-col">
-            <div class="switch" role="group" aria-label="Não Conformidade Grave">
-              <input id="ncg" type="checkbox" />
+            <div class="form-grid">
               <div>
-                <label for="ncg">NCG (Não Conformidade Grave) – zera a nota</label>
-                <div class="help">Se marcado, exige motivo e impacto e carimba “NCG” no PDF.</div>
+                <label for="colabNome">Nome do colaborador <span class="req">*</span></label>
+                <input id="colabNome" type="text" autocomplete="name" required placeholder="Ex.: Janice da Silva" />
+              </div>
+              <div>
+                <label for="colabEmail">E-mail do colaborador <span class="req">*</span></label>
+                <input id="colabEmail" type="email" autocomplete="email" required placeholder="ex.: nome@empresa.com" />
+              </div>
+
+              <div>
+                <label for="monitorNome">Nome do monitor <span class="req">*</span></label>
+                <input id="monitorNome" type="text" required placeholder="Ex.: Diogo" />
+              </div>
+              <div>
+                <label for="dtHora">Data e hora da monitoria</label>
+                <input id="dtHora" type="text" readonly aria-readonly="true" />
+              </div>
+
+              <div>
+                <label for="dtAtendimento">Data do atendimento <span class="req">*</span></label>
+                <input id="dtAtendimento" type="date" required />
+              </div>
+              <div>
+                <label for="protocolo">Protocolo/OS <span class="req">*</span></label>
+                <input id="protocolo" type="text" required placeholder="Ex.: 2026-000123 / OS 17885973" />
+              </div>
+
+              <div>
+                <label for="monitoriaId">ID da monitoria</label>
+                <input id="monitoriaId" type="text" class="mono" readonly aria-readonly="true" />
+              </div>
+              <div>
+                <label for="servico">Serviço <span class="req">*</span></label>
+                <select id="servico" aria-label="Selecionar serviço" required>
+                  <option value="">Selecione…</option>
+                </select>
               </div>
             </div>
 
-            <div class="card" style="padding:12px; border-radius:16px; box-shadow:none; border:1px dashed rgba(68,73,92,.22); background:rgba(226,229,240,.18)">
-              <label for="suggestedFilename">Sugestão de nome para salvar o PDF</label>
-              <input id="suggestedFilename" type="text" class="mono" readonly aria-readonly="true" />
-              <div class="help">Dica: a sugestão também vira o título do documento (ajuda no nome padrão do PDF no navegador).</div>
+            <div class="divider"></div>
+
+            <fieldset class="flag-row" aria-label="Tipo de monitoria" style="border:0;padding:0;margin:0">
+              <legend class="sr-only">Tipo de monitoria</legend>
+
+              <label class="flag" for="modeNormal">
+                <input id="modeNormal" type="radio" name="auditMode" value="NORMAL" checked />
+                <span>Normal</span>
+              </label>
+
+              <label class="flag" for="modeNcg">
+                <input id="modeNcg" type="radio" name="auditMode" value="NCG" />
+                <span>NCG</span>
+              </label>
+
+              <label class="flag" for="modeNcs">
+                <input id="modeNcs" type="radio" name="auditMode" value="NCS" />
+                <span>NCS</span>
+              </label>
+            </fieldset>
+
+            <div class="form-grid" id="ncgFields" style="display:none; margin-top:12px">
+              <div>
+                <label for="ncgMotivo">Motivo (NCG) <span class="req">*</span></label>
+                <input id="ncgMotivo" type="text" placeholder="Texto curto e objetivo" />
+              </div>
+              <div>
+                <label for="ncgImpacto">Impacto (NCG) <span class="req">*</span></label>
+                <input id="ncgImpacto" type="text" placeholder="Texto curto e objetivo" />
+              </div>
+            </div>
+
+            <div class="form-grid" id="ncsFields" style="display:none; margin-top:12px">
+              <div>
+                <label for="ncsMotivo">Motivo (NCS) <span class="req">*</span></label>
+                <input id="ncsMotivo" type="text" placeholder="Ex.: Classificação incorreta do serviço" />
+              </div>
+              <div>
+                <label for="ncsObs">Serviço correto (opcional)</label>
+                <input id="ncsObs" type="text" placeholder="Ex.: Troca de titularidade" />
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="card" style="padding:12px;border-radius:16px;box-shadow:none;border:1px dashed rgba(25,27,35,.18);background:rgba(246,247,251,.85)">
+              <label for="suggestedFilename">Nome sugerido do PDF</label>
+              <input id="suggestedFilename" type="text" class="mono" readonly aria-readonly="true" aria-describedby="fnHint" />
+              <div class="tiny" id="fnHint">Use este nome ao salvar em PDF (ou deixe o navegador sugerir pelo título).</div>
+            </div>
+          </section>
+
+          <section class="card" id="questionsCard" aria-label="Perguntas" style="margin-top:16px">
+            <h2>🧩 Perguntas do serviço <span class="badge" id="serviceBadge">Nenhum serviço selecionado</span></h2>
+
+            <div id="questionsEmpty" class="footer-note">
+              Selecione um serviço para carregar as perguntas. Respostas em botões (1 ativa por pergunta).
+              <br /><b>Dica QA:</b> ao marcar <b>Não</b> ou <b>Parcial</b>, a evidência se torna obrigatória.
+            </div>
+
+            <div id="questions" class="q-list" role="list" aria-live="polite"></div>
+          </section>
+
+          <section class="card" aria-label="Resumo" style="margin-top:16px">
+            <h2>🧨 Resumo de falhas <span class="badge">NÃO / PARCIAL</span></h2>
+            <div class="summary-fail" id="failBox">
+              <div class="empty" id="failEmpty">Nenhuma falha registrada até agora.</div>
+              <ul id="failList" style="display:none"></ul>
+            </div>
+          </section>
+
+          <section class="card" aria-label="Campos finais" style="margin-top:16px">
+            <h2>📝 Observações e plano</h2>
+            <div class="form-grid">
+              <div>
+                <label for="obs">Observações (opcional)</label>
+                <textarea id="obs" placeholder="Contexto, evidências gerais, pontos fortes e pontos de atenção…"></textarea>
+              </div>
+              <div>
+                <label for="plano">Plano de ação (opcional)</label>
+                <textarea id="plano" placeholder="Ações, prazos, responsáveis…"></textarea>
+              </div>
+            </div>
+          </section>
+
+          <section class="card no-print" aria-label="Persistência" style="margin-top:16px">
+            <h2>💾 Rascunho offline <span class="badge">localStorage</span></h2>
+
+            <div class="actions">
+              <button class="btn btn--ghost" id="btnSaveDraft" type="button">Salvar rascunho</button>
+              <button class="btn btn--ghost" id="btnLoadDraft" type="button">Carregar rascunho</button>
+              <button class="btn btn--secondary" id="btnExportJson" type="button">Exportar JSON</button>
+              <button class="btn btn--ghost" id="btnDeleteDraft" type="button">Apagar rascunho salvo</button>
+              <button class="btn btn--danger" id="btnClear" type="button">Limpar tela</button>
+            </div>
+
+            <div class="footer-note">
+              <b>Atenção:</b> o rascunho guarda <b>nome</b> e <b>e-mail</b> no navegador (neste dispositivo).
+              Use “Apagar rascunho salvo” quando necessário.
+            </div>
+          </section>
+        </main>
+
+        <aside aria-label="Visor">
+          <div class="visor" role="region" aria-label="Visor fixo">
+            <h3>
+              <span>Visor</span>
+              <span class="badge" id="docModeBadge">Documento: EDITANDO</span>
+            </h3>
+
+            <div class="score-grid" aria-label="KPIs">
+              <div class="kpi">
+                <div class="label">Nota Real</div>
+                <div class="value" id="kpiReal">0,0%</div>
+              </div>
+              <div class="kpi">
+                <div class="label">Nota Final</div>
+                <div class="value" id="kpiFinal">0%</div>
+              </div>
+            </div>
+
+            <div class="tiny" id="kpiMeta" style="margin-top:10px">—</div>
+
+            <div class="progress" aria-label="Barra de progresso"><div class="bar" id="bar"></div></div>
+
+            <div class="status" aria-label="Status">
+              <span class="tag tag--warn" id="statusTag">Pendente</span>
+              <span class="badge" id="denomBadge">Pesos considerados: 0</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="error-panel" id="errors" aria-live="polite" aria-atomic="true">
+              <h4>Para gerar PDF FINAL, faltam:</h4>
+              <ul id="errorList"></ul>
+            </div>
+
+            <div class="actions no-print" aria-label="Ações">
+              <button class="btn btn--secondary" id="btnDraft" type="button">PDF RASCUNHO</button>
+              <button class="btn btn--primary" id="btnFinal" type="button">PDF FINAL</button>
+            </div>
+
+            <div class="footer-note no-print">
+              Ao imprimir, selecione <b>Salvar como PDF</b> e use o nome sugerido.
+            </div>
+
+            <div class="tiny" style="margin-top:10px">
+              PARTIAL_FACTOR = <span class="mono">0.5</span> • WEIGHT_SCALE = <span class="mono">10</span>
             </div>
           </div>
-
-          <div class="form-grid" id="ncgFields" style="display:none; margin-top:12px">
-            <div>
-              <label for="ncgMotivo">Motivo do NCG *</label>
-              <input id="ncgMotivo" type="text" placeholder="Texto curto e objetivo" />
-            </div>
-            <div>
-              <label for="ncgImpacto">Impacto (custo/cliente/empresa) *</label>
-              <input id="ncgImpacto" type="text" placeholder="Texto curto e objetivo" />
-            </div>
-          </div>
-        </section>
-
-        <section class="card" aria-label="Perguntas" style="margin-top:16px">
-          <h2><span aria-hidden="true">🧩</span> Perguntas do serviço <span class="badge" id="serviceBadge">Nenhum serviço selecionado</span></h2>
-
-          <div id="questionsEmpty" class="footer-note">
-            Selecione um serviço para começar. As respostas são em botões tipo <b>pill</b> (1 ativa por pergunta).
-          </div>
-
-          <div id="questions" class="q-list" role="list" aria-live="polite"></div>
-        </section>
-
-        <section class="card" aria-label="Falhas" style="margin-top:16px">
-          <h2><span aria-hidden="true">🧨</span> Resumo de falhas <span class="badge">NÃO / PARCIAL</span></h2>
-          <div class="summary-fail" id="failBox">
-            <div class="empty" id="failEmpty">Nenhuma falha registrada até agora.</div>
-            <ul id="failList" style="display:none"></ul>
-          </div>
-        </section>
-
-        <section class="card" aria-label="Campos finais" style="margin-top:16px">
-          <h2><span aria-hidden="true">📝</span> Campos finais (feedback)</h2>
-          <div class="form-grid">
-            <div>
-              <label for="obs">Observações (opcional)</label>
-              <textarea id="obs" placeholder="Registre contexto, evidências, pontos fortes e pontos de atenção…"></textarea>
-            </div>
-            <div>
-              <label for="plano">Plano de ação (opcional)</label>
-              <textarea id="plano" placeholder="Ações, prazos, responsáveis, alinhamentos…"></textarea>
-            </div>
-          </div>
-        </section>
-
-        <section class="card no-print" aria-label="Persistência" style="margin-top:16px">
-          <h2><span aria-hidden="true">💾</span> Rascunho offline (localStorage) <span class="badge">Opcional • Implementado</span></h2>
-          <div class="row">
-            <button class="btn btn--ghost" id="btnSaveDraft" type="button">Salvar rascunho</button>
-            <button class="btn btn--ghost" id="btnLoadDraft" type="button">Carregar rascunho</button>
-            <button class="btn btn--danger" id="btnClear" type="button">Limpar tudo</button>
-            <span class="tiny muted">* Salva cabeçalho, serviço, respostas, NCG, motivo/impacto, observações e plano de ação.</span>
-          </div>
-        </section>
-      </main>
-
-      <aside class="right" aria-label="Visor de nota">
-        <div class="visor" role="region" aria-label="Visor fixo de nota">
-          <h3>
-            <span>Visor de Nota (tempo real)</span>
-            <span class="badge" id="modeBadge">Modo: —</span>
-          </h3>
-
-          <div class="score-grid" aria-label="KPIs">
-            <div class="kpi">
-              <div class="label">Nota Real</div>
-              <div class="value" id="kpiReal">0,0%</div>
-            </div>
-            <div class="kpi">
-              <div class="label">Nota Final (múltiplo de 5)</div>
-              <div class="value" id="kpiFinal">0%</div>
-            </div>
-          </div>
-
-          <div class="progress" aria-label="Barra de progresso">
-            <div class="bar" id="bar"></div>
-          </div>
-
-          <div class="status" aria-label="Status">
-            <span class="tag tag--warn" id="statusTag">Pendente</span>
-            <span class="badge" id="denomBadge">Pesos considerados: 0</span>
-          </div>
-
-          <div class="divider"></div>
-
-          <div class="row" style="justify-content:space-between">
-            <div class="tiny muted">PARTIAL_FACTOR = <span class="mono">0.5</span> • WEIGHT_SCALE = <span class="mono">10</span></div>
-          </div>
-
-          <div class="error-panel" id="errors" aria-live="polite" aria-atomic="true">
-            <h4>Para gerar PDF FINAL, faltam:</h4>
-            <ul id="errorList"></ul>
-          </div>
-
-          <div class="actions no-print" aria-label="Ações">
-            <button class="btn btn--secondary" id="btnDraft" type="button">PDF RASCUNHO</button>
-            <button class="btn btn--primary" id="btnFinal" type="button">PDF FINAL</button>
-          </div>
-
-          <div class="footer-note no-print" id="printHint">
-            <b>Dica de auditoria:</b> ao abrir a janela de impressão, selecione <b>Salvar como PDF</b> e use o nome sugerido.
-          </div>
-        </div>
-      </aside>
-    </div>
+        </aside>
+      </div>
+    </form>
 
     <!-- PRINT AREA -->
     <section class="print-area" aria-hidden="true">
       <div class="print-page" id="printPage">
         <div id="watermark" class="watermark" style="display:none">RASCUNHO – INCOMPLETO</div>
         <div id="ncgStamp" class="ncg-stamp" style="display:none">NCG</div>
+        <div id="ncsStamp" class="ncs-stamp" style="display:none">NCS</div>
 
         <div class="print-header">
           <div class="print-brand">
             <div class="print-logo" aria-hidden="true"></div>
             <div>
-              <h2 class="print-title">Monitoria de Qualidade (QA) – Guariroba</h2>
+              <h2 class="print-title">Monitoria de Serviços – Guariroba</h2>
               <p class="print-sub" id="printSub">—</p>
             </div>
           </div>
           <div class="print-badges" aria-label="Selos">
             <span class="print-pill" id="printId">ID: —</span>
             <span class="print-pill" id="printWhen">Data/Hora: —</span>
-            <span class="print-pill" id="printMode">Tipo: —</span>
+            <span class="print-pill" id="printMode">Documento: —</span>
+            <span class="print-pill" id="printAudit">Monitoria: —</span>
           </div>
         </div>
 
@@ -906,15 +800,22 @@
             <h4>Resultado</h4>
             <div class="print-kv">
               <div><b>Nota Real:</b> <span id="pNotaReal">0,0%</span></div>
-              <div><b>Nota Final (múltiplo de 5):</b> <span id="pNotaFinal">0%</span></div>
+              <div><b>Nota Final:</b> <span id="pNotaFinal">0%</span></div>
               <div><b>Status:</b> <span id="pStatus">—</span></div>
             </div>
           </div>
           <div class="print-box" id="ncgBox" style="display:none">
-            <h4>NCG – Detalhes</h4>
+            <h4>NCG</h4>
             <div class="print-kv">
               <div><b>Motivo:</b> <span id="pNcgMotivo">—</span></div>
               <div><b>Impacto:</b> <span id="pNcgImpacto">—</span></div>
+            </div>
+          </div>
+          <div class="print-box" id="ncsBox" style="display:none">
+            <h4>NCS</h4>
+            <div class="print-kv">
+              <div><b>Motivo:</b> <span id="pNcsMotivo">—</span></div>
+              <div><b>Serviço correto:</b> <span id="pNcsObs">—</span></div>
             </div>
           </div>
         </div>
@@ -922,11 +823,12 @@
         <table class="avoid-break" aria-label="Tabela de auditoria">
           <thead>
             <tr>
-              <th style="width:40%">Pergunta</th>
-              <th style="width:14%">Resposta</th>
-              <th style="width:10%">Peso</th>
-              <th style="width:16%">Peso Considerado</th>
-              <th style="width:20%">Pontos Obtidos</th>
+              <th style="width:34%">Pergunta</th>
+              <th style="width:10%">Resposta</th>
+              <th style="width:8%">Peso</th>
+              <th style="width:14%">Peso Considerado</th>
+              <th style="width:12%">Pontos</th>
+              <th style="width:22%">Evidência</th>
             </tr>
           </thead>
           <tbody id="pTable"></tbody>
@@ -935,22 +837,22 @@
         <div class="print-summary">
           <div class="print-box">
             <h4>Resumo de falhas (NÃO / PARCIAL)</h4>
-            <div class="print-kv print-small" id="pFalhas">—</div>
+            <div class="print-kv" id="pFalhas">—</div>
           </div>
           <div class="print-box">
             <h4>Declaração de ciência</h4>
-            <div class="print-kv print-small">Declaro ciência do conteúdo desta monitoria.</div>
+            <div class="print-kv">Declaro ciência do conteúdo desta monitoria.</div>
           </div>
         </div>
 
         <div class="print-grid" style="margin-top:10px">
           <div class="print-box">
             <h4>Observações</h4>
-            <div class="print-kv print-small" id="pObs">—</div>
+            <div class="print-kv" id="pObs">—</div>
           </div>
           <div class="print-box">
             <h4>Plano de ação</h4>
-            <div class="print-kv print-small" id="pPlano">—</div>
+            <div class="print-kv" id="pPlano">—</div>
           </div>
         </div>
 
@@ -965,557 +867,835 @@
   </div>
 
   <script>
-    (function () {
+    (function(){
       'use strict';
 
-      // ===== CONSTANTS =====
-      const PARTIAL_FACTOR = 0.5;
-      const WEIGHT_SCALE = 10; // integer scaling
-      const DRAFT_STORAGE_KEY = 'GUAR_QA_MONITORIA_DRAFT_V3';
+      // ===========================
+      // THEME TOGGLE (light/dark)
+      // ===========================
+      const THEME_KEY = 'GUAR_UI_THEME_V1';
 
-      // ===== SERVICE DEFINITIONS (JSON) =====
-      const SERVICES = {
-        "Troca de titularidade": [
-          { id: "a1", text: "Atualização Cadastral", type: "YN", weight: 30 },
-          { id: "a2", text: "Documento Anexo", type: "YNP", weight: 20 },
-          { id: "a3", text: "Conferência de débitos do CPF do novo titular", type: "YN", weight: 20 },
-          { id: "a4", text: "Check list observado na matrícula", type: "YNP", weight: 15 },
-          { id: "a5", text: "Economia é a mesma do contrato", type: "YNP", weight: 15 }
-        ],
-        "Ligação Nova": [
-          { id: "b1", text: "Atualização Cadastral", type: "YN", weight: 30 },
-          { id: "b2", text: "Documento Anexo", type: "YNP", weight: 15 },
-          { id: "b3", text: "Conferência de débitos do CPF do novo titular", type: "YN", weight: 15 },
-          { id: "b4", text: "Check list observado na matrícula", type: "YNP", weight: 10 },
-          { id: "b5", text: "Economia é a mesma do contrato", type: "YNP", weight: 10 },
-          { id: "b6", text: "Termo de água assinado (se aplicável)", type: "YNNA", weight: 7.5 },
-          { id: "b7", text: "Termo de esgoto assinado (se aplicável)", type: "YNNA", weight: 7.5 },
-          { id: "b8", text: "Print do ArcGis (se aplicável)", type: "YNNA", weight: 2.5 },
-          { id: "b9", text: "Overlay (se aplicável)", type: "YNNA", weight: 2.5 }
-        ],
-        "Deslocamento de Cavalete": [
-          { id: "c1", text: "Atualização Cadastral", type: "YN", weight: 30 },
-          { id: "c2", text: "Valor do Serviço gerado de forma correta", type: "YN", weight: 30 },
-          { id: "c3", text: "Termo de água assinado", type: "YN", weight: 25 },
-          { id: "c4", text: "Documento do titular anexado (em caso de deslocamento +1 metro)", type: "YNNA", weight: 15 }
-        ],
-        "Consumo Final": [
-          { id: "d1", text: "Atualização Cadastral", type: "YN", weight: 30 },
-          { id: "d2", text: "Termo de Consumo Final Anexado", type: "YN", weight: 20 },
-          { id: "d3", text: "Encerramento gerado da forma correta: Diferença de consumo, guia de encerramento e tarifa fixa", type: "YN", weight: 25 },
-          { id: "d4", text: "Guia de encerramento quitada", type: "YN", weight: 15 },
-          { id: "d5", text: "Leitura observada no sistema e dados básicos no sistema", type: "YN", weight: 10 }
-        ],
-        "Parcelamento": [
-          { id: "e1", text: "Atualização Cadastral", type: "YN", weight: 30 },
-          { id: "e2", text: "Termo de parcelamento anexado no sistema junto com documento do cliente", type: "YN", weight: 25 },
-          { id: "e3", text: "Feito dentro da regra comercial de parcelamento", type: "YN", weight: 20 },
-          { id: "e4", text: "Comentário no GSS devidamente explicativo", type: "YN", weight: 15 },
-          { id: "e5", text: "Todos os valores foram estornados", type: "YN", weight: 10 }
-        ]
-      };
-
-      const RESPONSE_LABELS = {
-        YES: 'Sim',
-        NO: 'Não',
-        PARTIAL: 'Parcial',
-        NA: 'Não aplicável',
-        PENDING: 'PENDENTE'
-      };
-
-      // ===== UTILS =====
-      const Utils = {
-        pad2(n) { return String(n).padStart(2, '0'); },
-        pad4(n) { return String(n).padStart(4, '0'); },
-        formatDateTimeBR(d) {
-          const dd = this.pad2(d.getDate());
-          const mm = this.pad2(d.getMonth() + 1);
-          const yyyy = d.getFullYear();
-          const hh = this.pad2(d.getHours());
-          const mi = this.pad2(d.getMinutes());
-          return `${dd}/${mm}/${yyyy} ${hh}:${mi}`;
-        },
-        formatDateBRFromInput(value) {
-          if (!value) return '—';
-          const [y, m, d] = value.split('-');
-          if (!y || !m || !d) return '—';
-          return `${d}/${m}/${y}`;
-        },
-        sanitizeFilenameName(name) {
-          const noAcc = (name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-          const cleaned = noAcc.replace(/[^a-zA-Z0-9 _.-]+/g, ' ');
-          const collapsed = cleaned.replace(/\s+/g, ' ').trim();
-          return collapsed.slice(0, 40) || 'Colaborador';
-        },
-        sanitizeFilename(str) {
-          return this.sanitizeFilenameName(str || '');
-        },
-        computeRoundToNearest5(x) {
-          const scaled = x / 5;
-          const floor = Math.floor(scaled);
-          const frac = scaled - floor;
-          let rounded;
-          if (frac > 0.5) rounded = floor + 1;
-          else if (frac < 0.5) rounded = floor;
-          else rounded = floor + 1;
-          return rounded * 5;
-        },
-        isValidEmail(val) {
-          if (!val) return false;
-          const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          return re.test(String(val).trim());
-        },
-        weightScaled(w) {
-          return Math.round(w * WEIGHT_SCALE);
-        },
-        answerFactor(ans) {
-          if (ans === RESPONSE_LABELS.YES) return 1;
-          if (ans === RESPONSE_LABELS.NO) return 0;
-          if (ans === RESPONSE_LABELS.PARTIAL) return PARTIAL_FACTOR;
-          if (ans === RESPONSE_LABELS.NA) return 0;
-          return null;
-        },
-        randomHex4() {
-          const v = Math.floor(Math.random() * 0x10000);
-          return this.pad4(v.toString(16).toUpperCase());
-        },
-        buildMonitoriaId(d) {
-          const yyyy = d.getFullYear();
-          const mm = this.pad2(d.getMonth() + 1);
-          const dd = this.pad2(d.getDate());
-          const hh = this.pad2(d.getHours());
-          const mi = this.pad2(d.getMinutes());
-          return `GUAR-${yyyy}${mm}${dd}-${hh}${mi}-${this.randomHex4()}`;
-        },
-        formatPercent1(x) {
-          const v = Math.round(x * 10) / 10;
-          return v.toFixed(1).replace('.', ',') + '%';
+      function getSystemTheme(){
+        try{
+          return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        }catch(_e){
+          return 'light';
         }
-      };
-
-      // ===== STATE =====
-      class AppState {
-        constructor() {
-          this._state = {
-            ts: new Date(),
-            id: '',
-            serviceName: '',
-            answers: {},
-            mode: '—'
-          };
-        }
-        get() { return this._state; }
-        set(patch) { this._state = { ...this._state, ...patch }; }
       }
 
-      // ===== MAIN APP =====
-      class MonitoriaApp {
-        constructor() {
-          this.state = new AppState();
+      function applyTheme(theme, persist=true){
+        const t = (theme === 'dark') ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
 
-          this.elements = {
-            idBadge: document.getElementById('idBadge'),
-            tsBadge: document.getElementById('tsBadge'),
-            dtHora: document.getElementById('dtHora'),
-            monitoriaId: document.getElementById('monitoriaId'),
-            servico: document.getElementById('servico'),
-            serviceBadge: document.getElementById('serviceBadge'),
-            questions: document.getElementById('questions'),
-            questionsEmpty: document.getElementById('questionsEmpty'),
-            bar: document.getElementById('bar'),
-            statusTag: document.getElementById('statusTag'),
-            denomBadge: document.getElementById('denomBadge'),
-            modeBadge: document.getElementById('modeBadge'),
-            errors: document.getElementById('errors'),
-            errorList: document.getElementById('errorList'),
-            btnDraft: document.getElementById('btnDraft'),
-            btnFinal: document.getElementById('btnFinal'),
-            btnSaveDraft: document.getElementById('btnSaveDraft'),
-            btnLoadDraft: document.getElementById('btnLoadDraft'),
-            btnClear: document.getElementById('btnClear'),
-            ncg: document.getElementById('ncg'),
-            ncgFields: document.getElementById('ncgFields'),
-            ncgMotivo: document.getElementById('ncgMotivo'),
-            ncgImpacto: document.getElementById('ncgImpacto'),
-            colabNome: document.getElementById('colabNome'),
-            colabEmail: document.getElementById('colabEmail'),
-            monitorNome: document.getElementById('monitorNome'),
-            dtAtendimento: document.getElementById('dtAtendimento'),
-            protocolo: document.getElementById('protocolo'),
-            obs: document.getElementById('obs'),
-            plano: document.getElementById('plano'),
-            suggestedFilename: document.getElementById('suggestedFilename'),
-            failEmpty: document.getElementById('failEmpty'),
-            failList: document.getElementById('failList'),
-            kpiReal: document.getElementById('kpiReal'),
-            kpiFinal: document.getElementById('kpiFinal'),
+        const btn = document.getElementById('themeToggle');
+        if(btn){
+          const isDark = (t === 'dark');
+          btn.textContent = isDark ? '🌙 Escuro' : '☀️ Claro';
+          btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+        }
 
-            // Print
-            watermark: document.getElementById('watermark'),
-            ncgStamp: document.getElementById('ncgStamp'),
-            printSub: document.getElementById('printSub'),
-            printId: document.getElementById('printId'),
-            printWhen: document.getElementById('printWhen'),
-            printMode: document.getElementById('printMode'),
-            pColab: document.getElementById('pColab'),
-            pEmail: document.getElementById('pEmail'),
-            pMonitor: document.getElementById('pMonitor'),
-            pServico: document.getElementById('pServico'),
-            pDtAt: document.getElementById('pDtAt'),
-            pProt: document.getElementById('pProt'),
-            pNotaReal: document.getElementById('pNotaReal'),
-            pNotaFinal: document.getElementById('pNotaFinal'),
-            pStatus: document.getElementById('pStatus'),
-            ncgBox: document.getElementById('ncgBox'),
-            pNcgMotivo: document.getElementById('pNcgMotivo'),
-            pNcgImpacto: document.getElementById('pNcgImpacto'),
-            pTable: document.getElementById('pTable'),
-            pFalhas: document.getElementById('pFalhas'),
-            pObs: document.getElementById('pObs'),
-            pPlano: document.getElementById('pPlano')
+        if(persist){
+          try{ localStorage.setItem(THEME_KEY, t); }catch(_e){}
+        }
+      }
+
+      function initThemeToggle(){
+        let saved = null;
+        try{ saved = localStorage.getItem(THEME_KEY); }catch(_e){}
+
+        const initial = (saved === 'dark' || saved === 'light') ? saved : getSystemTheme();
+        applyTheme(initial, false);
+
+        const btn = document.getElementById('themeToggle');
+        if(btn){
+          btn.addEventListener('click', ()=>{
+            const current = document.documentElement.getAttribute('data-theme') || getSystemTheme();
+            applyTheme(current === 'dark' ? 'light' : 'dark', true);
+          });
+        }
+      }
+
+      initThemeToggle();
+
+      const PARTIAL_FACTOR = 0.5;
+      const WEIGHT_SCALE = 10;
+      const DRAFT_STORAGE_KEY = 'GUAR_QA_MONITORIA_DRAFT_V6';
+
+      const SERVICES = Object.freeze({
+        "Troca de titularidade": [
+          { id:"a1", text:"Atualização Cadastral", type:"YN", weight:30 },
+          { id:"a2", text:"Documento Anexo", type:"YNP", weight:20 },
+          { id:"a3", text:"Conferência de débitos do CPF do novo titular", type:"YN", weight:20 },
+          { id:"a4", text:"Check list observado na matrícula", type:"YNP", weight:15 },
+          { id:"a5", text:"Economia é a mesma do contrato", type:"YNP", weight:15 }
+        ],
+        "Ligação Nova": [
+          { id:"b1", text:"Atualização Cadastral", type:"YN", weight:30 },
+          { id:"b2", text:"Documento Anexo", type:"YNP", weight:15 },
+          { id:"b3", text:"Conferência de débitos do CPF do novo titular", type:"YN", weight:15 },
+          { id:"b4", text:"Check list observado na matrícula", type:"YNP", weight:10 },
+          { id:"b5", text:"Economia é a mesma do contrato", type:"YNP", weight:10 },
+          { id:"b6", text:"Termo de água assinado (se aplicável)", type:"YNNA", weight:7.5 },
+          { id:"b7", text:"Termo de esgoto assinado (se aplicável)", type:"YNNA", weight:7.5 },
+          { id:"b8", text:"Print do ArcGis (se aplicável)", type:"YNNA", weight:2.5 },
+          { id:"b9", text:"Overlay (se aplicável)", type:"YNNA", weight:2.5 }
+        ],
+        "Deslocamento de Cavalete": [
+          { id:"c1", text:"Atualização Cadastral", type:"YN", weight:30 },
+          { id:"c2", text:"Valor do Serviço gerado de forma correta", type:"YN", weight:30 },
+          { id:"c3", text:"Termo de água assinado", type:"YN", weight:25 },
+          { id:"c4", text:"Documento do titular anexado (em caso de deslocamento +1 metro)", type:"YNNA", weight:15 }
+        ],
+        "Consumo Final": [
+          { id:"d1", text:"Atualização Cadastral", type:"YN", weight:30 },
+          { id:"d2", text:"Termo de Consumo Final Anexado", type:"YN", weight:20 },
+          { id:"d3", text:"Encerramento gerado da forma correta: Diferença de consumo, guia de encerramento e tarifa fixa", type:"YN", weight:25 },
+          { id:"d4", text:"Guia de encerramento quitada", type:"YN", weight:15 },
+          { id:"d5", text:"Leitura observada no sistema e dados básicos no sistema", type:"YN", weight:10 }
+        ],
+        "Parcelamento": [
+          { id:"e1", text:"Atualização Cadastral", type:"YN", weight:30 },
+          { id:"e2", text:"Termo de parcelamento anexado no sistema junto com documento do cliente", type:"YN", weight:25 },
+          { id:"e3", text:"Feito dentro da regra comercial de parcelamento", type:"YN", weight:20 },
+          { id:"e4", text:"Comentário no GSS devidamente explicativo", type:"YN", weight:15 },
+          { id:"e5", text:"Todos os valores foram estornados", type:"YN", weight:10 }
+        ]
+      });
+
+      const RESPONSE_LABELS = Object.freeze({
+        YES:'Sim', NO:'Não', PARTIAL:'Parcial', NA:'Não aplicável', PENDING:'PENDENTE'
+      });
+
+      const AUDIT_MODES = Object.freeze({
+        NORMAL:'NORMAL',
+        NCG:'NCG',
+        NCS:'NCS'
+      });
+
+      const Utils = {
+        pad2(n){return String(n).padStart(2,'0');},
+        formatDateTimeBR(d){
+          const dd=this.pad2(d.getDate());
+          const mm=this.pad2(d.getMonth()+1);
+          const yyyy=d.getFullYear();
+          const hh=this.pad2(d.getHours());
+          const mi=this.pad2(d.getMinutes());
+          return `${dd}/${mm}/${yyyy} ${hh}:${mi}`;
+        },
+        formatDateBRFromInput(v){
+          if(!v) return '—';
+          const [y,m,d]=String(v).split('-');
+          if(!y||!m||!d) return '—';
+          return `${d}/${m}/${y}`;
+        },
+        sanitizeFilenameName(name){
+          const raw = String(name || '');
+          const noAcc = raw.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+          const cleaned = noAcc.replace(/[^a-zA-Z0-9 _.-]+/g,' ').replace(/\s+/g,' ').trim();
+          const safe = cleaned.replace(/^\.+/,'').replace(/\.+$/,'').trim();
+          return safe.slice(0,60) || 'Colaborador';
+        },
+        isValidEmail(val){
+          const v=String(val||'').trim();
+          if(!v) return false;
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+        },
+        weightScaled(w){
+          return Math.round((Number(w) * WEIGHT_SCALE) + Number.EPSILON);
+        },
+        answerFactor(ans){
+          if(ans===RESPONSE_LABELS.YES) return 1;
+          if(ans===RESPONSE_LABELS.NO) return 0;
+          if(ans===RESPONSE_LABELS.PARTIAL) return PARTIAL_FACTOR;
+          if(ans===RESPONSE_LABELS.NA) return 0;
+          return null;
+        },
+        randomHex4(){
+          try{
+            if(window.crypto && crypto.getRandomValues){
+              const arr = new Uint16Array(1);
+              crypto.getRandomValues(arr);
+              return String(arr[0].toString(16).toUpperCase()).padStart(4,'0');
+            }
+          }catch(_e){}
+          const v=Math.floor(Math.random()*0x10000);
+          return String(v.toString(16).toUpperCase()).padStart(4,'0');
+        },
+        buildMonitoriaId(d){
+          const yyyy=d.getFullYear();
+          const mm=this.pad2(d.getMonth()+1);
+          const dd=this.pad2(d.getDate());
+          const hh=this.pad2(d.getHours());
+          const mi=this.pad2(d.getMinutes());
+          return `GUAR-${yyyy}${mm}${dd}-${hh}${mi}-${this.randomHex4()}`;
+        },
+        computeRoundToNearest5(x){
+          const step=5;
+          const scaled=x/step;
+          const floor=Math.floor(scaled);
+          const frac=scaled-floor;
+          const eps=1e-9;
+          if(frac>0.5+eps) return (floor+1)*step;
+          if(frac<0.5-eps) return floor*step;
+          return (floor+1)*step;
+        },
+        formatPercent1(x){
+          const v=Math.round((x*10)+Number.EPSILON)/10;
+          return v.toFixed(1).replace('.',',')+'%';
+        },
+        clip(text, max=90){
+          const t=String(text||'').trim();
+          if(!t) return '';
+          if(t.length<=max) return t;
+          return t.slice(0,max-1)+'…';
+        }
+      };
+
+      class AppState{
+        constructor(){
+          this._s={
+            ts:new Date(),
+            id:'',
+            serviceName:'',
+            auditMode:AUDIT_MODES.NORMAL,
+            docMode:'EDITANDO',
+            answers:{},
+            evidences:{}
+          };
+        }
+        get(){return this._s;}
+        set(p){this._s={...this._s,...p};}
+      }
+
+      class MonitoriaApp{
+        constructor(){
+          this.state=new AppState();
+
+          this.el={
+            form:document.getElementById('qaForm'),
+
+            idBadge:document.getElementById('idBadge'),
+            tsBadge:document.getElementById('tsBadge'),
+            dtHora:document.getElementById('dtHora'),
+            monitoriaId:document.getElementById('monitoriaId'),
+            servico:document.getElementById('servico'),
+            serviceBadge:document.getElementById('serviceBadge'),
+
+            questionsCard:document.getElementById('questionsCard'),
+            questions:document.getElementById('questions'),
+            questionsEmpty:document.getElementById('questionsEmpty'),
+
+            bar:document.getElementById('bar'),
+            statusTag:document.getElementById('statusTag'),
+            denomBadge:document.getElementById('denomBadge'),
+            docModeBadge:document.getElementById('docModeBadge'),
+            errors:document.getElementById('errors'),
+            errorList:document.getElementById('errorList'),
+
+            btnDraft:document.getElementById('btnDraft'),
+            btnFinal:document.getElementById('btnFinal'),
+
+            btnSaveDraft:document.getElementById('btnSaveDraft'),
+            btnLoadDraft:document.getElementById('btnLoadDraft'),
+            btnDeleteDraft:document.getElementById('btnDeleteDraft'),
+            btnExportJson:document.getElementById('btnExportJson'),
+            btnClear:document.getElementById('btnClear'),
+
+            modeNormal:document.getElementById('modeNormal'),
+            modeNcg:document.getElementById('modeNcg'),
+            modeNcs:document.getElementById('modeNcs'),
+
+            ncgFields:document.getElementById('ncgFields'),
+            ncgMotivo:document.getElementById('ncgMotivo'),
+            ncgImpacto:document.getElementById('ncgImpacto'),
+
+            ncsFields:document.getElementById('ncsFields'),
+            ncsMotivo:document.getElementById('ncsMotivo'),
+            ncsObs:document.getElementById('ncsObs'),
+
+            colabNome:document.getElementById('colabNome'),
+            colabEmail:document.getElementById('colabEmail'),
+            monitorNome:document.getElementById('monitorNome'),
+            dtAtendimento:document.getElementById('dtAtendimento'),
+            protocolo:document.getElementById('protocolo'),
+            obs:document.getElementById('obs'),
+            plano:document.getElementById('plano'),
+            suggestedFilename:document.getElementById('suggestedFilename'),
+
+            failEmpty:document.getElementById('failEmpty'),
+            failList:document.getElementById('failList'),
+
+            kpiReal:document.getElementById('kpiReal'),
+            kpiFinal:document.getElementById('kpiFinal'),
+            kpiMeta:document.getElementById('kpiMeta'),
+
+            watermark:document.getElementById('watermark'),
+            ncgStamp:document.getElementById('ncgStamp'),
+            ncsStamp:document.getElementById('ncsStamp'),
+            printSub:document.getElementById('printSub'),
+            printId:document.getElementById('printId'),
+            printWhen:document.getElementById('printWhen'),
+            printMode:document.getElementById('printMode'),
+            printAudit:document.getElementById('printAudit'),
+
+            pColab:document.getElementById('pColab'),
+            pEmail:document.getElementById('pEmail'),
+            pMonitor:document.getElementById('pMonitor'),
+            pServico:document.getElementById('pServico'),
+            pDtAt:document.getElementById('pDtAt'),
+            pProt:document.getElementById('pProt'),
+            pNotaReal:document.getElementById('pNotaReal'),
+            pNotaFinal:document.getElementById('pNotaFinal'),
+            pStatus:document.getElementById('pStatus'),
+            ncgBox:document.getElementById('ncgBox'),
+            pNcgMotivo:document.getElementById('pNcgMotivo'),
+            pNcgImpacto:document.getElementById('pNcgImpacto'),
+            ncsBox:document.getElementById('ncsBox'),
+            pNcsMotivo:document.getElementById('pNcsMotivo'),
+            pNcsObs:document.getElementById('pNcsObs'),
+            pTable:document.getElementById('pTable'),
+            pFalhas:document.getElementById('pFalhas'),
+            pObs:document.getElementById('pObs'),
+            pPlano:document.getElementById('pPlano')
           };
 
           this.init();
         }
 
-        init() {
+        init(){
+          this.validateServiceDefinitions();
           this.populateServiceSelect();
           this.initIdAndTime();
-          this.setMode('—');
+          this.setDocMode('EDITANDO');
+          this.applyAuditModeFromUI();
           this.renderQuestions();
-          this.wireInputs();
-          this.updateScoreUI();
+          this.wire();
+          this.updateAll();
 
-          setInterval(() => {
-            this.elements.tsBadge.textContent = Utils.formatDateTimeBR(new Date());
-          }, 30000);
+          window.addEventListener('afterprint', ()=>{
+            this.setDocMode('EDITANDO');
+            this.updateAll();
+          });
         }
 
-        populateServiceSelect() {
-          const names = Object.keys(SERVICES);
-          for (const name of names) {
-            const opt = document.createElement('option');
-            opt.value = name;
-            opt.textContent = name;
-            this.elements.servico.appendChild(opt);
+        validateServiceDefinitions(){
+          const problems=[];
+          for(const [name, qs] of Object.entries(SERVICES)){
+            const sum=qs.reduce((a,q)=>a+Number(q.weight||0),0);
+            if(Math.abs(sum-100)>0.0001) problems.push(`${name}: soma de pesos = ${sum}`);
+            const seen=new Set();
+            for(const q of qs){
+              if(seen.has(q.id)) problems.push(`${name}: id duplicado ${q.id}`);
+              seen.add(q.id);
+            }
+          }
+          if(problems.length){
+            console.warn('[QA] Problemas na configuração SERVICES:', problems);
+            this.el.serviceBadge.textContent='⚠️ Pesos/IDs';
+            this.el.serviceBadge.classList.add('badge--warn');
+            this.el.serviceBadge.title=problems.join(' | ');
           }
         }
 
-        initIdAndTime() {
-          const d = new Date();
-          const id = Utils.buildMonitoriaId(d);
-          this.state.set({ ts: d, id });
-
-          this.elements.monitoriaId.value = id;
-          this.elements.dtHora.value = Utils.formatDateTimeBR(d);
-          this.elements.idBadge.textContent = `ID: ${id}`;
-          this.elements.tsBadge.textContent = Utils.formatDateTimeBR(d);
-          this.updateSuggestedFilename();
+        populateServiceSelect(){
+          const names = Object.keys(SERVICES).sort((a,b)=>a.localeCompare(b,'pt-BR'));
+          for(const name of names){
+            const opt=document.createElement('option');
+            opt.value=name; opt.textContent=name;
+            this.el.servico.appendChild(opt);
+          }
         }
 
-        refreshTimestamp() {
-          const ts = new Date();
-          this.state.set({ ts });
-          this.elements.dtHora.value = Utils.formatDateTimeBR(ts);
-          this.elements.tsBadge.textContent = Utils.formatDateTimeBR(ts);
-          // mantém o mesmo ID para governança
-          this.elements.monitoriaId.value = this.state.get().id;
-          this.updateSuggestedFilename();
+        initIdAndTime(){
+          const d=new Date();
+          const id=Utils.buildMonitoriaId(d);
+          this.state.set({ts:d,id});
+          this.el.monitoriaId.value=id;
+          this.el.dtHora.value=Utils.formatDateTimeBR(d);
+          this.el.idBadge.textContent=`ID: ${id}`;
+          this.el.tsBadge.textContent=Utils.formatDateTimeBR(d);
         }
 
-        setMode(mode) {
-          this.state.set({ mode });
-          this.elements.modeBadge.textContent = `Modo: ${mode}`;
+        refreshTimestamp(){
+          const ts=new Date();
+          this.state.set({ts});
+          this.el.dtHora.value=Utils.formatDateTimeBR(ts);
+          this.el.tsBadge.textContent=Utils.formatDateTimeBR(ts);
         }
 
-        onServiceChange() {
-          const serviceName = this.elements.servico.value;
-          this.state.set({ serviceName, answers: {} });
+        setDocMode(mode){
+          this.state.set({docMode:mode});
+          this.el.docModeBadge.textContent=`Documento: ${mode}`;
+        }
+
+        getAuditMode(){
+          if(this.el.modeNcg.checked) return AUDIT_MODES.NCG;
+          if(this.el.modeNcs.checked) return AUDIT_MODES.NCS;
+          return AUDIT_MODES.NORMAL;
+        }
+
+        isNonEvaluativeMode(){
+          const m=this.state.get().auditMode;
+          return m===AUDIT_MODES.NCG || m===AUDIT_MODES.NCS;
+        }
+
+        applyAuditModeFromUI(){
+          const auditMode=this.getAuditMode();
+          this.state.set({auditMode});
+
+          const isNCG = auditMode===AUDIT_MODES.NCG;
+          const isNCS = auditMode===AUDIT_MODES.NCS;
+
+          this.el.ncgFields.style.display = isNCG ? 'grid' : 'none';
+          this.el.ncsFields.style.display = isNCS ? 'grid' : 'none';
+
+          this.el.ncgMotivo.required = isNCG;
+          this.el.ncgImpacto.required = isNCG;
+          this.el.ncsMotivo.required = isNCS;
+
+          if(!isNCG){
+            this.el.ncgMotivo.classList.remove('is-invalid');
+            this.el.ncgImpacto.classList.remove('is-invalid');
+          }
+          if(!isNCS){
+            this.el.ncsMotivo.classList.remove('is-invalid');
+          }
+
+          this.setQuestionsEnabled(!this.isNonEvaluativeMode());
+          this.updateAll();
+        }
+
+        setQuestionsEnabled(enabled){
+          const buttons = this.el.questions.querySelectorAll('button.pill');
+          const textareas = this.el.questions.querySelectorAll('textarea[data-evidence="true"]');
+          for(const b of buttons) b.disabled = !enabled;
+          for(const t of textareas) t.disabled = !enabled;
+          this.el.questionsCard.style.opacity = enabled ? '1' : '.70';
+        }
+
+        onServiceChange(){
+          const newService=this.el.servico.value;
+          const s=this.state.get();
+
+          const hasData = Object.keys(s.answers||{}).length>0 || Object.keys(s.evidences||{}).length>0;
+          if(s.serviceName && newService && newService!==s.serviceName && hasData){
+            const ok=confirm('Trocar de serviço vai limpar respostas e evidências deste formulário. Continuar?');
+            if(!ok){
+              this.el.servico.value=s.serviceName;
+              return;
+            }
+          }
+
+          this.state.set({serviceName:newService,answers:{},evidences:{}});
           this.renderQuestions();
-          this.updateSuggestedFilename();
+          this.updateAll();
         }
 
-        getServiceQuestions() {
-          const currentState = this.state.get();
-          return SERVICES[currentState.serviceName] || [];
+        getServiceQuestions(){
+          const s=this.state.get();
+          return SERVICES[s.serviceName] || [];
         }
 
-        getOptionsForType(type) {
-          if (type === 'YN') return [RESPONSE_LABELS.YES, RESPONSE_LABELS.NO];
-          if (type === 'YNP') return [RESPONSE_LABELS.YES, RESPONSE_LABELS.NO, RESPONSE_LABELS.PARTIAL];
-          if (type === 'YNNA') return [RESPONSE_LABELS.YES, RESPONSE_LABELS.NO, RESPONSE_LABELS.NA];
+        getOptionsForType(type){
+          if(type==='YN') return [RESPONSE_LABELS.YES, RESPONSE_LABELS.NO];
+          if(type==='YNP') return [RESPONSE_LABELS.YES, RESPONSE_LABELS.NO, RESPONSE_LABELS.PARTIAL];
+          if(type==='YNNA') return [RESPONSE_LABELS.YES, RESPONSE_LABELS.NO, RESPONSE_LABELS.NA];
           return [RESPONSE_LABELS.YES, RESPONSE_LABELS.NO];
         }
 
-        pillClassForAnswer(ans) {
-          if (ans === RESPONSE_LABELS.NO) return 'pill--no';
-          if (ans === RESPONSE_LABELS.PARTIAL) return 'pill--partial';
-          if (ans === RESPONSE_LABELS.NA) return 'pill--na';
+        pillClassForAnswer(ans){
+          if(ans===RESPONSE_LABELS.NO) return 'pill--no';
+          if(ans===RESPONSE_LABELS.PARTIAL) return 'pill--partial';
+          if(ans===RESPONSE_LABELS.NA) return 'pill--na';
           return '';
         }
 
-        clearQuestionsUI() {
-          this.elements.questions.innerHTML = '';
-        }
+        clearQuestionsUI(){ this.el.questions.innerHTML=''; }
 
-        renderQuestions() {
+        renderQuestions(){
           this.clearQuestionsUI();
+          const s=this.state.get();
 
-          const currentState = this.state.get();
-          if (!currentState.serviceName) {
-            this.elements.questionsEmpty.style.display = 'block';
-            this.elements.serviceBadge.textContent = 'Nenhum serviço selecionado';
-            this.updateScoreUI();
+          if(!s.serviceName){
+            this.el.questionsEmpty.style.display='block';
+            this.el.serviceBadge.textContent='Nenhum serviço selecionado';
             return;
           }
 
-          this.elements.questionsEmpty.style.display = 'none';
-          this.elements.serviceBadge.textContent = currentState.serviceName;
+          this.el.questionsEmpty.style.display='none';
+          this.el.serviceBadge.textContent=s.serviceName;
 
-          const qs = this.getServiceQuestions();
-          for (const q of qs) {
-            const item = document.createElement('div');
-            item.className = 'q-item';
-            item.setAttribute('role', 'listitem');
-            item.dataset.qid = q.id;
+          const qs=this.getServiceQuestions();
 
-            const top = document.createElement('div');
-            top.className = 'q-top';
+          for(const q of qs){
+            const item=document.createElement('div');
+            item.className='q-item';
+            item.setAttribute('role','listitem');
+            item.dataset.qid=q.id;
 
-            const title = document.createElement('p');
-            title.className = 'q-title';
-            title.textContent = q.text;
+            const top=document.createElement('div');
+            top.className='q-top';
 
-            const meta = document.createElement('div');
-            meta.className = 'q-meta';
-            meta.innerHTML = `<span class=\"chip\"><strong>Peso</strong>: ${q.weight}</span> <span class=\"chip chip--pending\" id=\"chip-${q.id}\">Resposta: <strong class=\"mono\" id=\"ans-${q.id}\">PENDENTE</strong></span>`;
+            const title=document.createElement('p');
+            title.className='q-title';
+            title.textContent=q.text;
+
+            const meta=document.createElement('div');
+            meta.className='q-meta';
+
+            const chipW=document.createElement('span');
+            chipW.className='chip';
+            const wStrong=document.createElement('strong');
+            wStrong.textContent='Peso';
+            chipW.appendChild(wStrong);
+            chipW.appendChild(document.createTextNode(`: ${q.weight}`));
+
+            const chipA=document.createElement('span');
+            chipA.className='chip chip--pending';
+            chipA.id=`chip-${q.id}`;
+            chipA.appendChild(document.createTextNode('Resposta: '));
+            const ansStrong=document.createElement('strong');
+            ansStrong.className='mono';
+            ansStrong.id=`ans-${q.id}`;
+            ansStrong.textContent=RESPONSE_LABELS.PENDING;
+            chipA.appendChild(ansStrong);
+
+            meta.appendChild(chipW);
+            meta.appendChild(chipA);
 
             top.appendChild(title);
             top.appendChild(meta);
 
-            const pillset = document.createElement('div');
-            pillset.className = 'pillset';
-            pillset.setAttribute('role', 'group');
+            const pillset=document.createElement('div');
+            pillset.className='pillset';
+            pillset.setAttribute('role','radiogroup');
             pillset.setAttribute('aria-label', `Respostas para: ${q.text}`);
+            pillset.dataset.qid=q.id;
 
-            const opts = this.getOptionsForType(q.type);
-            for (const opt of opts) {
-              const b = document.createElement('button');
-              b.type = 'button';
-              b.className = `pill ${this.pillClassForAnswer(opt)}`;
-              b.textContent = opt;
-              b.setAttribute('aria-pressed', 'false');
-              b.dataset.value = opt;
-              b.dataset.qid = q.id;
-              b.tabIndex = 0;
-
-              b.addEventListener('click', () => this.setAnswer(q.id, opt));
-
-              b.addEventListener('keydown', (ev) => {
-                const keys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-                if (!keys.includes(ev.key)) return;
-                ev.preventDefault();
-                const pills = Array.from(pillset.querySelectorAll('button.pill'));
-                const idx = pills.indexOf(b);
-                const dir = (ev.key === 'ArrowLeft' || ev.key === 'ArrowUp') ? -1 : 1;
-                let next = idx + dir;
-                if (next < 0) next = pills.length - 1;
-                if (next >= pills.length) next = 0;
-                pills[next].focus();
-              });
-
+            const opts=this.getOptionsForType(q.type);
+            for(let i=0;i<opts.length;i++){
+              const opt=opts[i];
+              const b=document.createElement('button');
+              b.type='button';
+              b.className=`pill ${this.pillClassForAnswer(opt)}`;
+              b.textContent=opt;
+              b.setAttribute('role','radio');
+              b.setAttribute('aria-checked','false');
+              b.dataset.value=opt;
+              b.dataset.qid=q.id;
+              b.tabIndex = (i===0) ? 0 : -1;
               pillset.appendChild(b);
             }
 
-            const foot = document.createElement('div');
-            foot.className = 'q-foot';
+            const foot=document.createElement('div');
+            foot.className='q-foot';
 
-            const consideredChip = document.createElement('span');
-            consideredChip.className = 'chip';
-            consideredChip.id = `cons-${q.id}`;
-            consideredChip.innerHTML = `Peso considerado: <strong class=\"mono\">${Utils.weightScaled(q.weight)}</strong>`;
+            const consideredChip=document.createElement('span');
+            consideredChip.className='chip';
+            consideredChip.id=`cons-${q.id}`;
+            consideredChip.appendChild(document.createTextNode('Peso considerado: '));
+            const consStrong=document.createElement('strong');
+            consStrong.className='mono';
+            consStrong.textContent=String(Utils.weightScaled(q.weight));
+            consideredChip.appendChild(consStrong);
 
-            const ptsChip = document.createElement('span');
-            ptsChip.className = 'chip';
-            ptsChip.id = `pts-${q.id}`;
-            ptsChip.innerHTML = `Pontos (item): <strong class=\"mono\">0</strong>`;
+            const ptsChip=document.createElement('span');
+            ptsChip.className='chip';
+            ptsChip.id=`pts-${q.id}`;
+            ptsChip.appendChild(document.createTextNode('Pontos (item): '));
+            const ptsStrong=document.createElement('strong');
+            ptsStrong.className='mono';
+            ptsStrong.textContent='0';
+            ptsChip.appendChild(ptsStrong);
 
             foot.appendChild(consideredChip);
             foot.appendChild(ptsChip);
 
+            const evidenceWrap=document.createElement('div');
+            evidenceWrap.className='evidence';
+            evidenceWrap.id=`evwrap-${q.id}`;
+
+            const evLabel=document.createElement('label');
+            evLabel.setAttribute('for', `evidence-${q.id}`);
+            evLabel.innerHTML = `Evidência / justificativa <span class="req">*</span>`;
+
+            const ev=document.createElement('textarea');
+            ev.id=`evidence-${q.id}`;
+            ev.dataset.evidence='true';
+            ev.dataset.qid=q.id;
+            ev.placeholder='Descreva o que foi observado (ex.: tela, trecho do sistema, horário, evidência objetiva).';
+            ev.value = (s.evidences||{})[q.id] || '';
+
+            const evHint=document.createElement('div');
+            evHint.className='hint';
+            evHint.innerHTML = `Obrigatória quando a resposta for <b>Não</b> ou <b>Parcial</b>.`;
+
+            evidenceWrap.appendChild(evLabel);
+            evidenceWrap.appendChild(ev);
+            evidenceWrap.appendChild(evHint);
+
             item.appendChild(top);
             item.appendChild(pillset);
             item.appendChild(foot);
+            item.appendChild(evidenceWrap);
 
-            this.elements.questions.appendChild(item);
+            this.el.questions.appendChild(item);
 
-            const existing = (currentState.answers || {})[q.id];
-            if (existing) {
-              this.setAnswer(q.id, existing, { silent: true });
-            } else {
+            const existing=(s.answers||{})[q.id];
+            if(existing){
+              this.setAnswer(q.id, existing, {silent:true});
+            }else{
               this.updateQuestionChips(q.id);
             }
+
+            this.updateEvidenceVisibility(q.id);
           }
 
-          this.updateScoreUI();
+          this.setQuestionsEnabled(!this.isNonEvaluativeMode());
         }
 
-        updateQuestionChips(qid) {
-          const currentState = this.state.get();
-          const ans = (currentState.answers || {})[qid];
+        updateQuestionChips(qid){
+          const s=this.state.get();
+          const ans=(s.answers||{})[qid];
 
-          const ansEl = document.getElementById(`ans-${qid}`);
-          const chip = document.getElementById(`chip-${qid}`);
+          const ansEl=document.getElementById(`ans-${qid}`);
+          const chip=document.getElementById(`chip-${qid}`);
 
-          if (ansEl) ansEl.textContent = ans ? ans : RESPONSE_LABELS.PENDING;
-          if (chip) {
+          if(ansEl) ansEl.textContent = ans ? ans : RESPONSE_LABELS.PENDING;
+          if(chip){
             chip.classList.remove('chip--pending');
-            if (!ans) chip.classList.add('chip--pending');
+            if(!ans) chip.classList.add('chip--pending');
           }
         }
 
-        setAnswer(qid, ans, opts = {}) {
-          const currentState = this.state.get();
-          const answers = { ...(currentState.answers || {}) };
-          answers[qid] = ans;
-          this.state.set({ answers });
+        updateEvidenceVisibility(qid){
+          const s=this.state.get();
+          const ans=(s.answers||{})[qid];
+          const wrap=document.getElementById(`evwrap-${qid}`);
+          const textarea=document.getElementById(`evidence-${qid}`);
 
-          const container = this.elements.questions.querySelector(`[data-qid=\"${qid}\"]`);
-          if (container) {
-            const pills = Array.from(container.querySelectorAll('button.pill'));
-            for (const p of pills) {
-              const pressed = (p.dataset.value === ans);
-              p.setAttribute('aria-pressed', pressed ? 'true' : 'false');
+          const needsEvidence = (ans===RESPONSE_LABELS.NO || ans===RESPONSE_LABELS.PARTIAL);
+
+          if(wrap) wrap.classList.toggle('is-open', !!needsEvidence);
+          if(textarea){
+            textarea.required = !!needsEvidence;
+            if(!needsEvidence){
+              textarea.classList.remove('is-invalid');
+            }
+          }
+        }
+
+        setEvidence(qid, text){
+          const s=this.state.get();
+          const evidences={...(s.evidences||{})};
+          evidences[qid]=String(text||'');
+          this.state.set({evidences});
+        }
+
+        setAnswer(qid, ans, opts={}){
+          const s=this.state.get();
+          const answers={...(s.answers||{})};
+          answers[qid]=ans;
+          this.state.set({answers});
+
+          const container=this.el.questions.querySelector(`[data-qid="${qid}"]`);
+          if(container){
+            const radios=Array.from(container.querySelectorAll('button.pill[role="radio"]'));
+            for(const r of radios){
+              const isOn = (r.dataset.value===ans);
+              r.setAttribute('aria-checked', isOn ? 'true' : 'false');
+              r.tabIndex = isOn ? 0 : -1;
             }
           }
 
           this.updateQuestionChips(qid);
-          this.updateScoreUI();
+          this.updateEvidenceVisibility(qid);
+          this.updateAll();
 
-          if (!opts.silent) {
-            // noop
-          }
+          if(!opts.silent){ /* noop */ }
         }
 
-        toggleNcgFields() {
-          const on = this.elements.ncg.checked;
-          this.elements.ncgFields.style.display = on ? 'grid' : 'none';
-          this.updateScoreUI();
+        requiredHeaderMissing(){
+          const errs=[];
+
+          const name=this.el.colabNome.value.trim();
+          const email=this.el.colabEmail.value.trim();
+          const monitor=this.el.monitorNome.value.trim();
+
+          if(!name) errs.push('Cabeçalho: Nome do colaborador');
+          if(!Utils.isValidEmail(email)) errs.push('Cabeçalho: E-mail do colaborador (válido)');
+          if(!monitor) errs.push('Cabeçalho: Nome do monitor');
+          if(!this.el.dtAtendimento.value) errs.push('Cabeçalho: Data do atendimento');
+          if(!this.el.protocolo.value.trim()) errs.push('Cabeçalho: Protocolo/OS');
+          if(!this.el.servico.value) errs.push('Cabeçalho: Serviço');
+
+          return errs;
         }
 
-        requiredHeaderMissing() {
-          const errors = [];
-          if (!this.elements.colabNome.value.trim()) errors.push('Nome do colaborador');
-          if (!Utils.isValidEmail(this.elements.colabEmail.value.trim())) errors.push('E-mail do colaborador (válido)');
-          if (!this.elements.monitorNome.value.trim()) errors.push('Nome do monitor');
-          if (!this.elements.dtAtendimento.value) errors.push('Data do atendimento');
-          if (!this.elements.protocolo.value.trim()) errors.push('Protocolo/OS');
-          if (!this.elements.servico.value) errors.push('Serviço');
-          return errors;
-        }
-
-        requiredQuestionsMissing() {
-          const missing = [];
-          const currentState = this.state.get();
-          const qs = this.getServiceQuestions();
-          for (const q of qs) {
-            const ans = (currentState.answers || {})[q.id];
-            if (!ans) missing.push(q.text);
+        requiredQuestionsMissing(){
+          const s=this.state.get();
+          const missing=[];
+          for(const q of this.getServiceQuestions()){
+            const ans=(s.answers||{})[q.id];
+            if(!ans) missing.push(`Pergunta sem resposta: ${q.text}`);
           }
           return missing;
         }
 
-        requiredNcgMissing() {
-          const miss = [];
-          if (this.elements.ncg.checked) {
-            if (!this.elements.ncgMotivo.value.trim()) miss.push('Motivo do NCG');
-            if (!this.elements.ncgImpacto.value.trim()) miss.push('Impacto do NCG');
+        requiredEvidenceMissing(){
+          const s=this.state.get();
+          const missing=[];
+          for(const q of this.getServiceQuestions()){
+            const ans=(s.answers||{})[q.id];
+            if(ans===RESPONSE_LABELS.NO || ans===RESPONSE_LABELS.PARTIAL){
+              const ev=(s.evidences||{})[q.id];
+              if(!String(ev||'').trim()){
+                missing.push(`Evidência obrigatória: ${q.text}`);
+              }
+            }
+          }
+          return missing;
+        }
+
+        requiredModeMissing(){
+          const miss=[];
+          const m=this.state.get().auditMode;
+
+          if(m===AUDIT_MODES.NCG){
+            if(!this.el.ncgMotivo.value.trim()) miss.push('NCG: Motivo');
+            if(!this.el.ncgImpacto.value.trim()) miss.push('NCG: Impacto');
+          }
+          if(m===AUDIT_MODES.NCS){
+            if(!this.el.ncsMotivo.value.trim()) miss.push('NCS: Motivo');
           }
           return miss;
         }
 
-        setErrorsPanel(list) {
-          this.elements.errorList.innerHTML = '';
-          if (!list.length) {
-            this.elements.errors.style.display = 'none';
-            return;
+        markInvalidFields(errs){
+          const clear=(el)=>el && el.classList.remove('is-invalid');
+          const mark=(el)=>el && el.classList.add('is-invalid');
+
+          clear(this.el.colabNome); clear(this.el.colabEmail); clear(this.el.monitorNome);
+          clear(this.el.dtAtendimento); clear(this.el.protocolo); clear(this.el.servico);
+          clear(this.el.ncgMotivo); clear(this.el.ncgImpacto); clear(this.el.ncsMotivo);
+
+          for(const q of this.getServiceQuestions()){
+            const ta=document.getElementById(`evidence-${q.id}`);
+            if(ta) ta.classList.remove('is-invalid');
           }
-          for (const item of list) {
-            const li = document.createElement('li');
-            li.textContent = item;
-            this.elements.errorList.appendChild(li);
+
+          for(const e of errs){
+            if(e.includes('Nome do colaborador')) mark(this.el.colabNome);
+            if(e.includes('E-mail do colaborador')) mark(this.el.colabEmail);
+            if(e.includes('Nome do monitor')) mark(this.el.monitorNome);
+            if(e.includes('Data do atendimento')) mark(this.el.dtAtendimento);
+            if(e.includes('Protocolo/OS')) mark(this.el.protocolo);
+            if(e.includes('Serviço')) mark(this.el.servico);
+
+            if(e.startsWith('NCG: Motivo')) mark(this.el.ncgMotivo);
+            if(e.startsWith('NCG: Impacto')) mark(this.el.ncgImpacto);
+            if(e.startsWith('NCS: Motivo')) mark(this.el.ncsMotivo);
+
+            if(e.startsWith('Evidência obrigatória:')){
+              const txt=e.replace('Evidência obrigatória:','').trim();
+              const q = this.getServiceQuestions().find(x=>x.text===txt);
+              if(q){
+                const ta=document.getElementById(`evidence-${q.id}`);
+                if(ta) ta.classList.add('is-invalid');
+              }
+            }
           }
-          this.elements.errors.style.display = 'block';
         }
 
-        collectAllErrorsForFinal() {
-          const missing = [];
-          const header = this.requiredHeaderMissing();
-          for (const h of header) missing.push(`Cabeçalho: ${h}`);
+        setErrorsPanel(list){
+          this.el.errorList.innerHTML='';
+          if(!list.length){this.el.errors.style.display='none';return;}
+          for(const item of list){
+            const li=document.createElement('li');
+            li.textContent=item;
+            this.el.errorList.appendChild(li);
+          }
+          this.el.errors.style.display='block';
+        }
 
-          const currentState = this.state.get();
-          if (currentState.serviceName) {
-            const qmiss = this.requiredQuestionsMissing();
-            for (const q of qmiss) missing.push(`Pergunta sem resposta: ${q}`);
+        collectAllErrorsForFinal(){
+          const missing=[];
+          missing.push(...this.requiredHeaderMissing());
+
+          const m=this.state.get().auditMode;
+          const skipQuestions = (m===AUDIT_MODES.NCG || m===AUDIT_MODES.NCS);
+
+          const s=this.state.get();
+          if(s.serviceName && !skipQuestions){
+            missing.push(...this.requiredQuestionsMissing());
+            missing.push(...this.requiredEvidenceMissing());
           }
 
-          const ncg = this.requiredNcgMissing();
-          for (const n of ncg) missing.push(`NCG: ${n}`);
-
+          missing.push(...this.requiredModeMissing());
           return missing;
         }
 
-        showErrorsForFinal() {
-          const errs = this.collectAllErrorsForFinal();
+        showErrorsForFinal(){
+          const errs=this.collectAllErrorsForFinal();
+          this.markInvalidFields(errs);
           this.setErrorsPanel(errs);
-          return errs.length === 0;
+          return errs.length===0;
         }
 
-        statusFromCompleteness() {
-          const currentState = this.state.get();
-          const serviceOk = !!currentState.serviceName;
-          if (this.elements.ncg.checked) return { tag: 'NCG – NOTA ZERADA', kind: 'ncg' };
-          if (!serviceOk) return { tag: 'Pendente', kind: 'warn' };
-          const missingH = this.requiredHeaderMissing();
-          const missingQ = this.requiredQuestionsMissing();
-          if (missingH.length || missingQ.length) return { tag: 'Pendente', kind: 'warn' };
-          return { tag: 'Conforme', kind: 'ok' };
+        statusFromCompleteness(){
+          const s=this.state.get();
+          const m=s.auditMode;
+
+          if(m===AUDIT_MODES.NCG) return {tag:'NCG – NOTA ZERADA', kind:'ncg'};
+          if(m===AUDIT_MODES.NCS) return {tag:'NCS – SEM AVALIAÇÃO', kind:'simple'};
+
+          if(!s.serviceName) return {tag:'Pendente', kind:'warn'};
+
+          const missingH=this.requiredHeaderMissing();
+          const missingQ=this.requiredQuestionsMissing();
+          const missingE=this.requiredEvidenceMissing();
+
+          if(missingH.length || missingQ.length || missingE.length) return {tag:'Pendente', kind:'warn'};
+          return {tag:'Conforme', kind:'ok'};
         }
 
-        updateStatusTag() {
-          const st = this.statusFromCompleteness();
-          this.elements.statusTag.classList.remove('tag--ok', 'tag--warn', 'tag--ncg');
-          if (st.kind === 'ok') this.elements.statusTag.classList.add('tag--ok');
-          if (st.kind === 'warn') this.elements.statusTag.classList.add('tag--warn');
-          if (st.kind === 'ncg') this.elements.statusTag.classList.add('tag--ncg');
-          this.elements.statusTag.textContent = st.tag;
+        updateStatusTag(){
+          const st=this.statusFromCompleteness();
+          this.el.statusTag.classList.remove('tag--ok','tag--warn','tag--ncg','tag--simple');
+          if(st.kind==='ok') this.el.statusTag.classList.add('tag--ok');
+          if(st.kind==='warn') this.el.statusTag.classList.add('tag--warn');
+          if(st.kind==='ncg') this.el.statusTag.classList.add('tag--ncg');
+          if(st.kind==='simple') this.el.statusTag.classList.add('tag--simple');
+          this.el.statusTag.textContent=st.tag;
         }
 
-        calcScore() {
-          const currentState = this.state.get();
+        calcScore(){
+          const s=this.state.get();
+          const m=s.auditMode;
 
-          if (this.elements.ncg.checked) {
-            return {
-              possible: 0,
-              obtained: 0,
-              real: 0,
-              rounded: 0,
-              denomWeight: 0,
-              perItem: []
-            };
+          if(m===AUDIT_MODES.NCG){
+            return {real:0, rounded:0, denomWeight:0, obtained:0, possible:0, answeredCount:0, totalCount:0, perItem:[], mode:'NCG'};
+          }
+          if(m===AUDIT_MODES.NCS){
+            return {real:0, rounded:0, denomWeight:0, obtained:0, possible:0, answeredCount:0, totalCount:0, perItem:[], mode:'NCS'};
           }
 
-          const qs = this.getServiceQuestions();
-          let possible = 0;
-          let obtained = 0;
-          let denomWeight = 0;
-          const perItem = [];
+          const qs=this.getServiceQuestions();
+          let possible=0, obtained=0, denomWeight=0;
+          let answeredCount=0;
+          const totalCount=qs.length;
 
-          for (const q of qs) {
-            const wScaled = Utils.weightScaled(q.weight);
-            const ans = (currentState.answers || {})[q.id];
+          const perItem=[];
+
+          for(const q of qs){
+            const wScaled=Utils.weightScaled(q.weight);
+            const ans=(s.answers||{})[q.id];
+
+            if(ans) answeredCount += 1;
+
             const isNA = ans === RESPONSE_LABELS.NA;
             const considered = isNA ? 0 : wScaled;
+
             const factor = Utils.answerFactor(ans);
 
             const consideredForCalc = (ans ? considered : wScaled);
@@ -1527,374 +1707,541 @@
             const pts = Math.round(consideredForCalc * factorForCalc);
             obtained += pts;
 
-            perItem.push({
-              id: q.id,
-              text: q.text,
-              weight: q.weight,
-              weightScaled: wScaled,
-              considered: consideredForCalc,
-              answer: ans || null,
-              factor: factorForCalc,
-              obtained: pts
-            });
+            perItem.push({id:q.id, considered:consideredForCalc, obtained:pts});
           }
 
-          const real = possible > 0 ? (obtained / possible) * 100 : 0;
+          const real = possible>0 ? (obtained/possible)*100 : 0;
           const rounded = Utils.computeRoundToNearest5(real);
-
-          return { possible, obtained, real, rounded, denomWeight, perItem };
+          return {real, rounded, denomWeight, obtained, possible, answeredCount, totalCount, perItem, mode:'NORMAL'};
         }
 
-        updateFailsUI(scoreObj) {
-          const qs = this.getServiceQuestions();
-          const currentState = this.state.get();
-          const fails = [];
+        updateFailsUI(score){
+          const m=this.state.get().auditMode;
 
-          for (const q of qs) {
-            const ans = (currentState.answers || {})[q.id];
-            if (ans === RESPONSE_LABELS.NO || ans === RESPONSE_LABELS.PARTIAL) {
-              const wScaled = Utils.weightScaled(q.weight);
-              const considered = wScaled;
-              const factor = (ans === RESPONSE_LABELS.NO) ? 0 : PARTIAL_FACTOR;
-              const obtained = Math.round(considered * factor);
-              fails.push({
-                text: q.text,
-                ans,
-                weight: q.weight,
-                obtained
-              });
+          if(m===AUDIT_MODES.NCS){
+            this.el.failEmpty.style.display='block';
+            this.el.failList.style.display='none';
+            this.el.failList.innerHTML='';
+            this.el.failEmpty.textContent='NCS: atendimento inviável para avaliação (apenas evidência).';
+            return;
+          }
+          if(m===AUDIT_MODES.NCG){
+            this.el.failEmpty.style.display='block';
+            this.el.failList.style.display='none';
+            this.el.failList.innerHTML='';
+            this.el.failEmpty.textContent='NCG: nota zerada (gravidade) – registre motivo e impacto.';
+            return;
+          }
+
+          this.el.failEmpty.textContent='Nenhuma falha registrada até agora.';
+
+          const s=this.state.get();
+          const qs=this.getServiceQuestions();
+          const fails=[];
+
+          for(const q of qs){
+            const ans=(s.answers||{})[q.id];
+            if(ans===RESPONSE_LABELS.NO || ans===RESPONSE_LABELS.PARTIAL){
+              const considered=Utils.weightScaled(q.weight);
+              const factor=(ans===RESPONSE_LABELS.NO) ? 0 : PARTIAL_FACTOR;
+              const obt=Math.round(considered*factor);
+              const ev=Utils.clip((s.evidences||{})[q.id], 110);
+              fails.push(`• ${q.text} — ${ans} (peso ${q.weight} | pontos ${obt})${ev ? ` | evidência: ${ev}` : ''}`);
             }
           }
 
-          if (!fails.length) {
-            this.elements.failEmpty.style.display = 'block';
-            this.elements.failList.style.display = 'none';
-            this.elements.failList.innerHTML = '';
-          } else {
-            this.elements.failEmpty.style.display = 'none';
-            this.elements.failList.style.display = 'block';
-            this.elements.failList.innerHTML = '';
-            for (const f of fails) {
-              const li = document.createElement('li');
-              li.textContent = `${f.text} — ${f.ans} (peso ${f.weight} | pontos ${f.obtained})`;
-              this.elements.failList.appendChild(li);
+          if(!fails.length){
+            this.el.failEmpty.style.display='block';
+            this.el.failList.style.display='none';
+            this.el.failList.innerHTML='';
+          }else{
+            this.el.failEmpty.style.display='none';
+            this.el.failList.style.display='block';
+            this.el.failList.innerHTML='';
+            for(const line of fails){
+              const li=document.createElement('li');
+              li.textContent=line.replace(/^•\s?/, '');
+              this.el.failList.appendChild(li);
             }
           }
 
-          if (scoreObj && scoreObj.perItem) {
-            for (const item of scoreObj.perItem) {
-              const ptsEl = document.getElementById(`pts-${item.id}`);
-              const consEl = document.getElementById(`cons-${item.id}`);
-              if (ptsEl) {
-                const strong = ptsEl.querySelector('strong');
-                if (strong) strong.textContent = String(item.obtained);
-              }
-              if (consEl) {
-                const strong = consEl.querySelector('strong');
-                if (strong) strong.textContent = String(item.considered);
-              }
+          for(const it of (score.perItem||[])){
+            const ptsEl=document.getElementById(`pts-${it.id}`);
+            const consEl=document.getElementById(`cons-${it.id}`);
+            if(ptsEl){
+              const strong=ptsEl.querySelector('strong');
+              if(strong) strong.textContent=String(it.obtained);
+            }
+            if(consEl){
+              const strong=consEl.querySelector('strong');
+              if(strong) strong.textContent=String(it.considered);
             }
           }
         }
 
-        // ✅ Ajuste #1: nome sugerido vira também o document.title (Chrome usa no nome padrão do PDF)
-        updateSuggestedFilename() {
-          const currentState = this.state.get();
+        updateSuggestedFilename(){
+          const s=this.state.get();
 
-          const email = (this.elements.colabEmail.value || '').trim().toLowerCase();
-          const codeRaw = email.includes('@') ? email.split('@')[0] : '';
-          const code = Utils.sanitizeFilename(codeRaw || this.elements.colabNome.value || 'Colaborador');
+          const email=(this.el.colabEmail.value||'').trim().toLowerCase();
+          const codeRaw=email.includes('@') ? email.split('@')[0] : '';
+          const code=Utils.sanitizeFilenameName(codeRaw || this.el.colabNome.value || 'Colaborador');
 
-          const service = Utils.sanitizeFilename(currentState.serviceName || 'Servico');
+          const service=Utils.sanitizeFilenameName(s.serviceName || 'Servico');
 
-          const d = currentState.ts || new Date();
-          const dd = Utils.pad2(d.getDate());
-          const mm = Utils.pad2(d.getMonth() + 1);
-          const yy = String(d.getFullYear()).slice(-2);
-          const hh = Utils.pad2(d.getHours());
-          const mi = Utils.pad2(d.getMinutes());
+          const d=s.ts || new Date();
+          const dd=Utils.pad2(d.getDate());
+          const mm=Utils.pad2(d.getMonth()+1);
+          const yy=String(d.getFullYear()).slice(-2);
+          const hh=Utils.pad2(d.getHours());
+          const mi=Utils.pad2(d.getMinutes());
 
-          const id = currentState.id || 'GUAR-XXXXXXXX-XXXX-XXXX';
-          const id4 = id.slice(-4);
+          const id=s.id || 'GUAR-XXXXXXXX-XXXX-XXXX';
+          const id4=id.slice(-4);
 
-          const filename = `Monitoria de Serviços - ${code} - ${service} - ${dd}-${mm}-${yy} - ${hh}${mi} - ${id4}.pdf`;
-          this.elements.suggestedFilename.value = filename;
+          const prefix='Monitoria de Serviços';
 
-          // ajuda a governança no print (nome sugerido do PDF no navegador)
-          document.title = filename.replace(/\.pdf$/i, '');
+          const m=s.auditMode;
+          const extra = (m===AUDIT_MODES.NCS) ? ' - NCS' : (m===AUDIT_MODES.NCG ? ' - NCG' : '');
+
+          const filename=`${prefix}${extra} - ${code} - ${service} - ${dd}-${mm}-${yy} - ${hh}${mi} - ${id4}.pdf`;
+
+          this.el.suggestedFilename.value=filename;
+          document.title=filename.replace(/\.pdf$/i,'');
         }
 
-        updateScoreUI() {
-          const s = this.calcScore();
+        updateKpis(score){
+          const m=this.state.get().auditMode;
 
-          this.elements.kpiReal.textContent = Utils.formatPercent1(s.real);
-          this.elements.kpiFinal.textContent = `${s.rounded}%`;
-          this.elements.bar.style.width = `${Math.max(0, Math.min(100, s.real))}%`;
-          this.elements.denomBadge.textContent = `Pesos considerados: ${s.denomWeight}`;
+          if(m===AUDIT_MODES.NCS){
+            this.el.kpiReal.textContent='—';
+            this.el.kpiFinal.textContent='—';
+            this.el.kpiMeta.textContent='NCS: sem avaliação por checklist.';
+            this.el.bar.style.width='0%';
+            this.el.denomBadge.textContent='Pesos considerados: 0';
+            return;
+          }
+          if(m===AUDIT_MODES.NCG){
+            this.el.kpiReal.textContent='0,0%';
+            this.el.kpiFinal.textContent='0%';
+            this.el.kpiMeta.textContent='NCG: nota zerada por gravidade.';
+            this.el.bar.style.width='0%';
+            this.el.denomBadge.textContent='Pesos considerados: 0';
+            return;
+          }
 
+          this.el.kpiReal.textContent = Utils.formatPercent1(score.real);
+          this.el.kpiFinal.textContent = `${score.rounded}%`;
+          this.el.bar.style.width = `${Math.max(0, Math.min(100, score.real))}%`;
+          this.el.denomBadge.textContent = `Pesos considerados: ${score.denomWeight}`;
+
+          const s=this.state.get();
+          const svc = s.serviceName ? `• Serviço: ${s.serviceName}` : '';
+          const meta = `Respondidas: ${score.answeredCount}/${score.totalCount} • Pontos: ${score.obtained}/${score.possible} ${svc}`;
+          this.el.kpiMeta.textContent = meta.trim();
+        }
+
+        updateAll(){
+          const score=this.calcScore();
+          this.updateKpis(score);
           this.updateStatusTag();
-          this.updateFailsUI(s);
+          this.updateFailsUI(score);
           this.updateSuggestedFilename();
-
-          this.elements.modeBadge.textContent = `Modo: ${this.state.get().mode}`;
         }
 
-        buildPrintData(mode) {
-          const currentState = this.state.get();
-          const score = this.calcScore();
+        getReadableAuditMode(){
+          const m=this.state.get().auditMode;
+          if(m===AUDIT_MODES.NCG) return 'NCG';
+          if(m===AUDIT_MODES.NCS) return 'NCS';
+          return 'Normal';
+        }
 
-          this.elements.printSub.textContent = `Documento de auditoria e alinhamento com o colaborador.`;
-          this.elements.printId.textContent = `ID: ${currentState.id}`;
-          this.elements.printWhen.textContent = `Data/Hora: ${Utils.formatDateTimeBR(currentState.ts)}`;
-          this.elements.printMode.textContent = `Tipo: ${mode}`;
+        buildPrintData(docMode){
+          const s=this.state.get();
+          const score=this.calcScore();
+          const auditLabel=this.getReadableAuditMode();
 
-          this.elements.pColab.textContent = (this.elements.colabNome.value.trim() || '—');
-          this.elements.pEmail.textContent = (this.elements.colabEmail.value.trim() || '—');
-          this.elements.pMonitor.textContent = (this.elements.monitorNome.value.trim() || '—');
-          this.elements.pServico.textContent = (currentState.serviceName || '—');
-          this.elements.pDtAt.textContent = Utils.formatDateBRFromInput(this.elements.dtAtendimento.value);
-          this.elements.pProt.textContent = (this.elements.protocolo.value.trim() || '—');
+          this.el.printSub.textContent='Documento de auditoria e alinhamento com o colaborador.';
+          this.el.printId.textContent=`ID: ${s.id}`;
+          this.el.printWhen.textContent=`Data/Hora: ${Utils.formatDateTimeBR(s.ts)}`;
+          this.el.printMode.textContent=`Documento: ${docMode}`;
+          this.el.printAudit.textContent=`Monitoria: ${auditLabel}`;
 
-          const status = this.statusFromCompleteness();
-          this.elements.pStatus.textContent = status.tag;
+          this.el.pColab.textContent=(this.el.colabNome.value.trim()||'—');
+          this.el.pEmail.textContent=(this.el.colabEmail.value.trim()||'—');
+          this.el.pMonitor.textContent=(this.el.monitorNome.value.trim()||'—');
+          this.el.pServico.textContent=(s.serviceName||'—');
+          this.el.pDtAt.textContent=Utils.formatDateBRFromInput(this.el.dtAtendimento.value);
+          this.el.pProt.textContent=(this.el.protocolo.value.trim()||'—');
 
-          if (this.elements.ncg.checked) {
-            this.elements.ncgStamp.style.display = 'block';
-            this.elements.ncgBox.style.display = 'block';
-            this.elements.pNcgMotivo.textContent = this.elements.ncgMotivo.value.trim() || '—';
-            this.elements.pNcgImpacto.textContent = this.elements.ncgImpacto.value.trim() || '—';
-          } else {
-            this.elements.ncgStamp.style.display = 'none';
-            this.elements.ncgBox.style.display = 'none';
+          const st=this.statusFromCompleteness();
+          this.el.pStatus.textContent=st.tag;
+
+          if(s.auditMode===AUDIT_MODES.NCG){
+            this.el.ncgStamp.style.display='block';
+            this.el.ncgBox.style.display='block';
+            this.el.pNcgMotivo.textContent=this.el.ncgMotivo.value.trim()||'—';
+            this.el.pNcgImpacto.textContent=this.el.ncgImpacto.value.trim()||'—';
+          }else{
+            this.el.ncgStamp.style.display='none';
+            this.el.ncgBox.style.display='none';
           }
 
-          this.elements.watermark.style.display = (mode === 'RASCUNHO') ? 'flex' : 'none';
-
-          this.elements.pNotaReal.textContent = Utils.formatPercent1(score.real);
-          this.elements.pNotaFinal.textContent = `${score.rounded}%`;
-
-          this.elements.pTable.innerHTML = '';
-          const qs = this.getServiceQuestions();
-
-          for (const q of qs) {
-            const ans = (currentState.answers || {})[q.id] || (mode === 'RASCUNHO' ? RESPONSE_LABELS.PENDING : '—');
-            const considered = (ans === RESPONSE_LABELS.NA) ? 0 : Utils.weightScaled(q.weight);
-
-            let factor;
-            if (ans === RESPONSE_LABELS.YES) factor = 1;
-            else if (ans === RESPONSE_LABELS.NO) factor = 0;
-            else if (ans === RESPONSE_LABELS.PARTIAL) factor = PARTIAL_FACTOR;
-            else if (ans === RESPONSE_LABELS.PENDING) factor = 0;
-            else factor = 0;
-
-            const obtained = Math.round(considered * factor);
-
-            const tr = document.createElement('tr');
-            const tdQ = document.createElement('td');
-            const tdA = document.createElement('td');
-            const tdW = document.createElement('td');
-            const tdC = document.createElement('td');
-            const tdO = document.createElement('td');
-
-            tdQ.textContent = q.text;
-            tdA.textContent = ans;
-            tdW.textContent = String(q.weight);
-            tdC.textContent = String(considered);
-            tdO.textContent = String(obtained);
-
-            tr.appendChild(tdQ);
-            tr.appendChild(tdA);
-            tr.appendChild(tdW);
-            tr.appendChild(tdC);
-            tr.appendChild(tdO);
-            this.elements.pTable.appendChild(tr);
+          if(s.auditMode===AUDIT_MODES.NCS){
+            this.el.ncsStamp.style.display='block';
+            this.el.ncsBox.style.display='block';
+            this.el.pNcsMotivo.textContent=this.el.ncsMotivo.value.trim()||'—';
+            this.el.pNcsObs.textContent=this.el.ncsObs.value.trim()||'—';
+          }else{
+            this.el.ncsStamp.style.display='none';
+            this.el.ncsBox.style.display='none';
           }
 
-          const fails = [];
-          for (const q of qs) {
-            const ans = (currentState.answers || {})[q.id];
-            if (ans === RESPONSE_LABELS.NO || ans === RESPONSE_LABELS.PARTIAL) {
-              const considered = Utils.weightScaled(q.weight);
-              const factor = (ans === RESPONSE_LABELS.NO) ? 0 : PARTIAL_FACTOR;
-              const obtained = Math.round(considered * factor);
-              fails.push(`• ${q.text} — ${ans} (peso ${q.weight} | pontos ${obtained})`);
+          this.el.watermark.style.display = (docMode==='RASCUNHO') ? 'flex' : 'none';
+
+          if(s.auditMode===AUDIT_MODES.NCS){
+            this.el.pNotaReal.textContent='N/A';
+            this.el.pNotaFinal.textContent='N/A';
+          }else{
+            this.el.pNotaReal.textContent=Utils.formatPercent1(score.real);
+            this.el.pNotaFinal.textContent=`${score.rounded}%`;
+          }
+
+          this.el.pTable.innerHTML='';
+          const qs=this.getServiceQuestions();
+
+          for(const q of qs){
+            let ans, considered, obtained, evidence;
+
+            if(s.auditMode===AUDIT_MODES.NCS){
+              ans='NÃO AVALIADO';
+              considered=0;
+              obtained=0;
+              evidence='—';
+            }else if(s.auditMode===AUDIT_MODES.NCG){
+              ans='NCG (ZERADO)';
+              considered=0;
+              obtained=0;
+              evidence='—';
+            }else{
+              ans=(s.answers||{})[q.id] || (docMode==='RASCUNHO' ? RESPONSE_LABELS.PENDING : '—');
+              considered = (ans===RESPONSE_LABELS.NA) ? 0 : Utils.weightScaled(q.weight);
+
+              let factor;
+              if(ans===RESPONSE_LABELS.YES) factor=1;
+              else if(ans===RESPONSE_LABELS.NO) factor=0;
+              else if(ans===RESPONSE_LABELS.PARTIAL) factor=PARTIAL_FACTOR;
+              else factor=0;
+
+              obtained = Math.round(considered*factor);
+
+              const ev=(s.evidences||{})[q.id];
+              evidence = (ans===RESPONSE_LABELS.NO || ans===RESPONSE_LABELS.PARTIAL) ? (String(ev||'').trim()||'—') : '—';
             }
+
+            const tr=document.createElement('tr');
+            const tdQ=document.createElement('td');
+            const tdA=document.createElement('td');
+            const tdW=document.createElement('td');
+            const tdC=document.createElement('td');
+            const tdO=document.createElement('td');
+            const tdE=document.createElement('td');
+
+            tdQ.textContent=q.text;
+            tdA.textContent=ans;
+            tdW.textContent=String(q.weight);
+            tdC.textContent=String(considered);
+            tdO.textContent=String(obtained);
+            tdE.textContent=evidence;
+
+            tr.appendChild(tdQ);tr.appendChild(tdA);tr.appendChild(tdW);tr.appendChild(tdC);tr.appendChild(tdO);tr.appendChild(tdE);
+            this.el.pTable.appendChild(tr);
           }
 
-          this.elements.pFalhas.textContent = fails.length ? fails.join('\n') : 'Nenhuma falha (NÃO/PARCIAL).';
-          this.elements.pFalhas.style.whiteSpace = 'pre-line';
+          if(s.auditMode===AUDIT_MODES.NCS){
+            this.el.pFalhas.textContent='NCS: inviável avaliar (apenas evidência).';
+          }else if(s.auditMode===AUDIT_MODES.NCG){
+            this.el.pFalhas.textContent='NCG: nota zerada por gravidade (ver motivo/impacto).';
+          }else{
+            const fails=[];
+            for(const q of qs){
+              const a=(s.answers||{})[q.id];
+              if(a===RESPONSE_LABELS.NO || a===RESPONSE_LABELS.PARTIAL){
+                const considered=Utils.weightScaled(q.weight);
+                const factor=(a===RESPONSE_LABELS.NO) ? 0 : PARTIAL_FACTOR;
+                const obt=Math.round(considered*factor);
+                const ev=String((s.evidences||{})[q.id]||'').trim();
+                fails.push(`• ${q.text} — ${a} (peso ${q.weight} | pontos ${obt})${ev?` | evidência: ${ev}`:''}`);
+              }
+            }
+            this.el.pFalhas.textContent=fails.length ? fails.join('\n') : 'Nenhuma falha (NÃO/PARCIAL).';
+          }
+          this.el.pFalhas.style.whiteSpace='pre-line';
 
-          this.elements.pObs.textContent = this.elements.obs.value.trim() || '—';
-          this.elements.pPlano.textContent = this.elements.plano.value.trim() || '—';
+          this.el.pObs.textContent=this.el.obs.value.trim()||'—';
+          this.el.pPlano.textContent=this.el.plano.value.trim()||'—';
         }
 
-        printDraft() {
-          this.setMode('RASCUNHO');
+        printDraft(){
+          this.setDocMode('RASCUNHO');
           this.setErrorsPanel([]);
           this.refreshTimestamp();
           this.buildPrintData('RASCUNHO');
           window.print();
         }
 
-        printFinal() {
-          this.setMode('FINAL');
+        printFinal(){
+          this.setDocMode('FINAL');
           this.refreshTimestamp();
-
-          const ok = this.showErrorsForFinal();
-          if (!ok) {
-            this.elements.errors.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          const ok=this.showErrorsForFinal();
+          if(!ok){
+            this.el.errors.scrollIntoView({behavior:'smooth', block:'nearest'});
             return;
           }
-
           this.buildPrintData('FINAL');
           window.print();
         }
 
-        saveDraft() {
-          const currentState = this.state.get();
-
-          const payload = {
-            version: 3,
-            savedAt: new Date().toISOString(),
-            id: currentState.id,
-            ts: currentState.ts.toISOString(),
-            header: {
-              colabNome: this.elements.colabNome.value,
-              colabEmail: this.elements.colabEmail.value,
-              monitorNome: this.elements.monitorNome.value,
-              dtAtendimento: this.elements.dtAtendimento.value,
-              protocolo: this.elements.protocolo.value
+        buildPayload(){
+          const s=this.state.get();
+          return {
+            version:6,
+            savedAt:new Date().toISOString(),
+            id:s.id,
+            ts:s.ts.toISOString(),
+            auditMode:s.auditMode,
+            header:{
+              colabNome:this.el.colabNome.value,
+              colabEmail:this.el.colabEmail.value,
+              monitorNome:this.el.monitorNome.value,
+              dtAtendimento:this.el.dtAtendimento.value,
+              protocolo:this.el.protocolo.value
             },
-            serviceName: currentState.serviceName,
-            answers: currentState.answers,
-            ncg: {
-              on: this.elements.ncg.checked,
-              motivo: this.elements.ncgMotivo.value,
-              impacto: this.elements.ncgImpacto.value
+            serviceName:s.serviceName,
+            answers:s.answers,
+            evidences:s.evidences,
+            ncg:{
+              motivo:this.el.ncgMotivo.value,
+              impacto:this.el.ncgImpacto.value
             },
-            finais: {
-              obs: this.elements.obs.value,
-              plano: this.elements.plano.value
-            }
+            ncs:{
+              motivo:this.el.ncsMotivo.value,
+              obs:this.el.ncsObs.value
+            },
+            finais:{obs:this.el.obs.value, plano:this.el.plano.value},
+            metrics:this.calcScore()
           };
-
-          localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(payload));
-          this.elements.btnSaveDraft.textContent = 'Rascunho salvo ✓';
-          setTimeout(() => (this.elements.btnSaveDraft.textContent = 'Salvar rascunho'), 1200);
         }
 
-        loadDraft() {
-          const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
-          if (!raw) {
-            this.elements.btnLoadDraft.textContent = 'Nada salvo';
-            setTimeout(() => (this.elements.btnLoadDraft.textContent = 'Carregar rascunho'), 1200);
+        saveDraft(){
+          const payload=this.buildPayload();
+          try{
+            localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(payload));
+            this.el.btnSaveDraft.textContent='Rascunho salvo ✓';
+          }catch(_e){
+            this.el.btnSaveDraft.textContent='Falha ao salvar';
+          }
+          setTimeout(()=>this.el.btnSaveDraft.textContent='Salvar rascunho', 1200);
+        }
+
+        loadDraft(){
+          const raw=localStorage.getItem(DRAFT_STORAGE_KEY);
+          if(!raw){
+            this.el.btnLoadDraft.textContent='Nada salvo';
+            setTimeout(()=>this.el.btnLoadDraft.textContent='Carregar rascunho', 1200);
             return;
           }
+          try{
+            const p=JSON.parse(raw);
+            if(!p || p.version!==6) throw new Error('Versão inválida');
 
-          try {
-            const payload = JSON.parse(raw);
-            if (!payload || payload.version !== 3) throw new Error('Versão inválida');
-
-            const ts = payload.ts ? new Date(payload.ts) : new Date();
-            const id = payload.id || Utils.buildMonitoriaId(ts);
+            const ts=p.ts ? new Date(p.ts) : new Date();
+            const id=p.id || Utils.buildMonitoriaId(ts);
 
             this.state.set({
-              ts,
-              id,
-              serviceName: payload.serviceName || '',
-              answers: payload.answers || {}
+              ts,id,
+              auditMode:p.auditMode || AUDIT_MODES.NORMAL,
+              serviceName:p.serviceName||'',
+              answers:p.answers||{},
+              evidences:p.evidences||{}
             });
 
-            this.elements.monitoriaId.value = id;
-            this.elements.dtHora.value = Utils.formatDateTimeBR(ts);
-            this.elements.idBadge.textContent = `ID: ${id}`;
-            this.elements.tsBadge.textContent = Utils.formatDateTimeBR(ts);
+            this.el.monitoriaId.value=id;
+            this.el.dtHora.value=Utils.formatDateTimeBR(ts);
+            this.el.idBadge.textContent=`ID: ${id}`;
+            this.el.tsBadge.textContent=Utils.formatDateTimeBR(ts);
 
-            this.elements.colabNome.value = payload.header?.colabNome || '';
-            this.elements.colabEmail.value = payload.header?.colabEmail || '';
-            this.elements.monitorNome.value = payload.header?.monitorNome || '';
-            this.elements.dtAtendimento.value = payload.header?.dtAtendimento || '';
-            this.elements.protocolo.value = payload.header?.protocolo || '';
+            this.el.colabNome.value=p.header?.colabNome || '';
+            this.el.colabEmail.value=p.header?.colabEmail || '';
+            this.el.monitorNome.value=p.header?.monitorNome || '';
+            this.el.dtAtendimento.value=p.header?.dtAtendimento || '';
+            this.el.protocolo.value=p.header?.protocolo || '';
+            this.el.servico.value=p.serviceName || '';
 
-            this.elements.servico.value = payload.serviceName || '';
+            this.el.modeNormal.checked = (this.state.get().auditMode===AUDIT_MODES.NORMAL);
+            this.el.modeNcg.checked = (this.state.get().auditMode===AUDIT_MODES.NCG);
+            this.el.modeNcs.checked = (this.state.get().auditMode===AUDIT_MODES.NCS);
 
-            this.elements.ncg.checked = !!payload.ncg?.on;
-            this.elements.ncgMotivo.value = payload.ncg?.motivo || '';
-            this.elements.ncgImpacto.value = payload.ncg?.impacto || '';
-            this.toggleNcgFields();
+            this.el.ncgMotivo.value=p.ncg?.motivo || '';
+            this.el.ncgImpacto.value=p.ncg?.impacto || '';
+            this.el.ncsMotivo.value=p.ncs?.motivo || '';
+            this.el.ncsObs.value=p.ncs?.obs || '';
 
-            this.elements.obs.value = payload.finais?.obs || '';
-            this.elements.plano.value = payload.finais?.plano || '';
+            this.el.obs.value=p.finais?.obs || '';
+            this.el.plano.value=p.finais?.plano || '';
 
+            this.applyAuditModeFromUI();
             this.renderQuestions();
-            this.updateScoreUI();
+            this.updateAll();
 
-            this.elements.btnLoadDraft.textContent = 'Rascunho carregado ✓';
-            setTimeout(() => (this.elements.btnLoadDraft.textContent = 'Carregar rascunho'), 1200);
-          } catch (e) {
-            this.elements.btnLoadDraft.textContent = 'Erro ao carregar';
-            setTimeout(() => (this.elements.btnLoadDraft.textContent = 'Carregar rascunho'), 1200);
+            this.el.btnLoadDraft.textContent='Rascunho carregado ✓';
+            setTimeout(()=>this.el.btnLoadDraft.textContent='Carregar rascunho', 1200);
+          }catch(_e){
+            this.el.btnLoadDraft.textContent='Erro ao carregar';
+            setTimeout(()=>this.el.btnLoadDraft.textContent='Carregar rascunho', 1200);
           }
         }
 
-        clearAll() {
-          const ok = confirm('Confirmar: deseja limpar todos os campos e respostas?');
-          if (!ok) return;
+        deleteDraft(){
+          localStorage.removeItem(DRAFT_STORAGE_KEY);
+          this.el.btnDeleteDraft.textContent='Rascunho apagado ✓';
+          setTimeout(()=>this.el.btnDeleteDraft.textContent='Apagar rascunho salvo', 1200);
+        }
+
+        exportJson(){
+          const payload=this.buildPayload();
+          const baseName = document.title || 'monitoria';
+          const safeName = Utils.sanitizeFilenameName(baseName).replace(/\s+/g,' ').trim() || 'monitoria';
+          const fileName = `${safeName}.json`;
+
+          const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+          const url = URL.createObjectURL(blob);
+
+          const a=document.createElement('a');
+          a.href=url;
+          a.download=fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+
+          setTimeout(()=>URL.revokeObjectURL(url), 2000);
+
+          this.el.btnExportJson.textContent='JSON exportado ✓';
+          setTimeout(()=>this.el.btnExportJson.textContent='Exportar JSON', 1200);
+        }
+
+        clearAll(){
+          const ok=confirm('Confirmar: deseja limpar todos os campos e respostas?');
+          if(!ok) return;
 
           this.initIdAndTime();
 
-          this.elements.colabNome.value = '';
-          this.elements.colabEmail.value = '';
-          this.elements.monitorNome.value = '';
-          this.elements.dtAtendimento.value = '';
-          this.elements.protocolo.value = '';
-          this.elements.servico.value = '';
-          this.elements.obs.value = '';
-          this.elements.plano.value = '';
-          this.elements.ncg.checked = false;
-          this.elements.ncgMotivo.value = '';
-          this.elements.ncgImpacto.value = '';
-          this.toggleNcgFields();
+          this.el.colabNome.value='';
+          this.el.colabEmail.value='';
+          this.el.monitorNome.value='';
+          this.el.dtAtendimento.value='';
+          this.el.protocolo.value='';
+          this.el.servico.value='';
+          this.el.obs.value='';
+          this.el.plano.value='';
 
-          this.state.set({ serviceName: '', answers: {} });
+          this.el.modeNormal.checked=true;
+          this.el.ncgMotivo.value='';
+          this.el.ncgImpacto.value='';
+          this.el.ncsMotivo.value='';
+          this.el.ncsObs.value='';
+
+          this.state.set({serviceName:'',answers:{},evidences:{},auditMode:AUDIT_MODES.NORMAL});
+          this.applyAuditModeFromUI();
 
           this.clearQuestionsUI();
-          this.elements.questionsEmpty.style.display = 'block';
-          this.elements.serviceBadge.textContent = 'Nenhum serviço selecionado';
-          this.setErrorsPanel([]);
+          this.el.questionsEmpty.style.display='block';
+          this.el.serviceBadge.textContent='Nenhum serviço selecionado';
 
-          this.updateScoreUI();
+          this.setErrorsPanel([]);
+          this.updateAll();
         }
 
-        wireInputs() {
-          this.elements.servico.addEventListener('change', () => this.onServiceChange());
-          this.elements.ncg.addEventListener('change', () => this.toggleNcgFields());
+        wire(){
+          this.el.servico.addEventListener('change', ()=>this.onServiceChange());
 
-          const recalcInputs = [
-            this.elements.colabNome,
-            this.elements.colabEmail,
-            this.elements.monitorNome,
-            this.elements.dtAtendimento,
-            this.elements.protocolo,
-            this.elements.dtAtendimento,
-            this.elements.ncgMotivo,
-            this.elements.ncgImpacto,
-            this.elements.obs,
-            this.elements.plano
+          const radios=[this.el.modeNormal,this.el.modeNcg,this.el.modeNcs];
+          for(const r of radios){
+            r.addEventListener('change', ()=>this.applyAuditModeFromUI());
+          }
+
+          this.el.questions.addEventListener('click', (ev)=>{
+            const btn = ev.target.closest('button.pill[role="radio"]');
+            if(!btn) return;
+            if(btn.disabled) return;
+            const qid=btn.dataset.qid;
+            const val=btn.dataset.value;
+            this.setAnswer(qid, val);
+          });
+
+          this.el.questions.addEventListener('keydown', (ev)=>{
+            const btn = ev.target.closest('button.pill[role="radio"]');
+            if(!btn) return;
+
+            const keys=['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Enter',' '];
+            if(!keys.includes(ev.key)) return;
+
+            const qid = btn.dataset.qid;
+            const group = btn.closest('[role="radiogroup"]');
+            if(!group) return;
+
+            const radios = Array.from(group.querySelectorAll('button.pill[role="radio"]'));
+            const idx = radios.indexOf(btn);
+
+            if(ev.key==='Enter' || ev.key===' '){
+              ev.preventDefault();
+              if(!btn.disabled) this.setAnswer(qid, btn.dataset.value);
+              return;
+            }
+
+            ev.preventDefault();
+            const dir=(ev.key==='ArrowLeft'||ev.key==='ArrowUp') ? -1 : 1;
+            let next=idx+dir;
+            if(next<0) next=radios.length-1;
+            if(next>=radios.length) next=0;
+
+            const nextBtn=radios[next];
+            nextBtn.focus();
+            if(!nextBtn.disabled){
+              this.setAnswer(qid, nextBtn.dataset.value);
+            }
+          });
+
+          this.el.questions.addEventListener('input', (ev)=>{
+            const ta = ev.target.closest('textarea[data-evidence="true"]');
+            if(!ta) return;
+            const qid=ta.dataset.qid;
+            this.setEvidence(qid, ta.value);
+
+            this.updateAll();
+            if(this.state.get().docMode==='FINAL') this.showErrorsForFinal();
+          });
+
+          const recalc=[
+            this.el.colabNome,this.el.colabEmail,this.el.monitorNome,this.el.dtAtendimento,this.el.protocolo,
+            this.el.ncgMotivo,this.el.ncgImpacto,this.el.ncsMotivo,this.el.ncsObs,
+            this.el.obs,this.el.plano
           ];
-
-          for (const i of recalcInputs) {
-            i.addEventListener('input', () => {
-              this.updateScoreUI();
-              if (this.state.get().mode === 'FINAL') this.showErrorsForFinal();
+          for(const i of recalc){
+            i.addEventListener('input', ()=>{
+              this.updateAll();
+              if(this.state.get().docMode==='FINAL') this.showErrorsForFinal();
             });
           }
 
-          this.elements.btnDraft.addEventListener('click', () => this.printDraft());
-          this.elements.btnFinal.addEventListener('click', () => this.printFinal());
-          this.elements.btnSaveDraft.addEventListener('click', () => this.saveDraft());
-          this.elements.btnLoadDraft.addEventListener('click', () => this.loadDraft());
-          this.elements.btnClear.addEventListener('click', () => this.clearAll());
+          this.el.btnDraft.addEventListener('click', ()=>this.printDraft());
+          this.el.btnFinal.addEventListener('click', ()=>this.printFinal());
+
+          this.el.btnSaveDraft.addEventListener('click', ()=>this.saveDraft());
+          this.el.btnLoadDraft.addEventListener('click', ()=>this.loadDraft());
+          this.el.btnDeleteDraft.addEventListener('click', ()=>this.deleteDraft());
+          this.el.btnExportJson.addEventListener('click', ()=>this.exportJson());
+
+          this.el.btnClear.addEventListener('click', ()=>this.clearAll());
         }
       }
 
